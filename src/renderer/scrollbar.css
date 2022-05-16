@@ -1,0 +1,24 @@
+/* This class will hide the scrollbar in the react-window component.
+ * It is not something the library supports, so special thanks to:
+ * https://github.com/bvaughn/react-window/issues/375#issuecomment-613647430
+ */
+.no-scrollbars {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &::-webkit-scrollbar {
+        width: 1px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+}
+
+.no-scrollbars::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
