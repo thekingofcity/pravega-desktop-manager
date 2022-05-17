@@ -16,5 +16,5 @@
     "dependencies": {
         "@thekingofcity/pravega": "^0.6.0"
     },
-    "license": "MIT"
+    "license": "Apache-2.0"
 }
