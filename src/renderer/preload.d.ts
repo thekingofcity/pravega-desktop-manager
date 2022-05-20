@@ -55,6 +55,9 @@ declare global {
                     scope: string,
                     stream: string
                 ) => Promise<void>;
+                // If both scope and stream is undefined in the main process
+                // (undefined on initialization), the main process will not
+                // read anything.
                 setWhichStreamToRead: (
                     name: string,
                     scope?: string,

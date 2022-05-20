@@ -12,6 +12,8 @@ import {
     Typography,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
 import { setCurrentStream } from '../../redux/connection';
 import { updatePreview } from '../../redux/preview';
@@ -32,6 +34,8 @@ const PreviewStream = () => {
 
     React.useEffect(
         () => {
+            // Ss we are still using <Tabs>, so no custom operation in `navigate`,
+            // we need to manually set the currentStream on load or each change.
             dispatch(setCurrentStream(`${scope}/${stream}`));
 
             // only proceed if the scopedStream exists
@@ -48,12 +52,6 @@ const PreviewStream = () => {
                 stream
             );
             window.electron.pravega.createWriter(
-                currentConnection,
-                scope,
-                stream
-            );
-
-            window.electron.pravega.setWhichStreamToRead(
                 currentConnection,
                 scope,
                 stream
@@ -99,15 +97,26 @@ const PreviewStream = () => {
         []
     );
 
+    // auto scroll the preview textarea to bottom
     const previewData =
         previewConnection[currentConnection]?.preview?.[`${scope}/${stream}`];
     const textLog = React.useRef<HTMLTextAreaElement | null>(null);
     React.useEffect(() => {
-        // auto scroll to bottom
         if (textLog.current)
             textLog.current.scrollTop = textLog.current.scrollHeight;
     }, [previewData]);
 
+    // set undefined on pause
+    const [pause, setPause] = React.useState(false);
+    React.useEffect(() => {
+        window.electron.pravega.setWhichStreamToRead(
+            currentConnection,
+            pause ? undefined : scope,
+            pause ? undefined : stream
+        );
+    }, [currentConnection, scope, stream, pause]);
+
+    // writer's pending data state
     const [writeArea, setWriteArea] = React.useState('');
     const handleWrite = () =>
         window.electron.pravega.writeEvents(
@@ -140,6 +149,7 @@ const PreviewStream = () => {
                     <MenuItem value="utf8">SimpleUtf8Decoder</MenuItem>
                 </Select>
             </Box>
+
             <TextareaAutosize
                 value={(previewData ?? []).join('\n')}
                 ref={textLog}
@@ -150,6 +160,19 @@ const PreviewStream = () => {
                     marginTop: 10,
                 }}
             />
+            <Fab
+                color="primary"
+                sx={{ position: 'absolute', bottom: 176, right: 16 }}
+            >
+                <IconButton onClick={() => setPause(!pause)}>
+                    {pause ? (
+                        <PlayArrowIcon sx={{ color: 'white' }} />
+                    ) : (
+                        <PauseIcon sx={{ color: 'white' }} />
+                    )}
+                </IconButton>
+            </Fab>
+
             <Tabs value="Writer1">
                 <Tab label="Writer" value="Writer1" />
             </Tabs>
