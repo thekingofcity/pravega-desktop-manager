@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define a type for the slice state
 export interface ConnectionState {
-    value: number;
     currentConnection: string;
     connections: { [id: string]: Connection };
+    advancedRead: boolean;
 }
 
 export interface Connection {
@@ -15,12 +15,14 @@ export interface Connection {
 }
 
 // Define the initial state using that type
-const initialState: ConnectionState = JSON.parse(
-    // @ts-ignore
-    localStorage.getItem('reduxState')
-) ?? {
+const initialState: ConnectionState = {
     currentConnection: 'pravega1',
     connections: {},
+    advancedRead: true,
+    ...JSON.parse(
+        // @ts-ignore
+        localStorage.getItem('reduxState')
+    ),
 };
 
 export const connectionSlice = createSlice({
@@ -99,6 +101,15 @@ export const connectionSlice = createSlice({
                     action.payload;
             }
         },
+        setAdvancedRead: (state, action: PayloadAction<boolean>) => {
+            state.advancedRead = action.payload;
+        },
+        resetAll: (state) => {
+            Object.values(state.connections).forEach((connection) => {
+                connection.currentTab = 'overview';
+                connection.openedStreams = [];
+            });
+        },
     },
 });
 
@@ -111,6 +122,8 @@ export const {
     addStream,
     delStream,
     setCurrentStream,
+    setAdvancedRead,
+    resetAll,
 } = connectionSlice.actions;
 
 export default connectionSlice.reducer;

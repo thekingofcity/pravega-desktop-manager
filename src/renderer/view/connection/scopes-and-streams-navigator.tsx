@@ -172,11 +172,11 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
     const [currentStream, setCurrentStream] = React.useState('');
     const [isAddScopeOpen, setIsAddScopeOpen] = React.useState(false);
     const handleAddScope = async (scopeName: string) => {
-        await window.electron.pravega.createScope(currentConnection, scopeName);
+        window.electron.pravega.createScope(currentConnection, scopeName);
     };
     const [isAddStreamOpen, setIsAddStreamOpen] = React.useState(false);
     const handleAddStream = async (streamName: string) => {
-        await window.electron.pravega.createStream(
+        window.electron.pravega.createStream(
             currentConnection,
             currentScope,
             streamName
@@ -195,8 +195,12 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
         } else if (removeScopeOrStreamType === 'Stream') {
             dispatch(delStream(`${currentScope}/${currentStream}`));
 
-            // TODO: cleanup related readerGroups, readers, and writers
-            await window.electron.pravega.deleteStream(
+            window.electron.pravega.cleanReadersAndWriters(
+                currentConnection,
+                currentScope,
+                currentStream
+            );
+            window.electron.pravega.deleteStream(
                 currentConnection,
                 currentScope,
                 currentStream

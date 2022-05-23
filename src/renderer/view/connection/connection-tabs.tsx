@@ -56,6 +56,29 @@ const ConnectionTabs = () => {
         );
     }, [dispatch, currentConnection]);
 
+    const handleCloseScopedStream = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        scopedStream: string
+    ) => {
+        window.electron.pravega.cleanReadersAndWriters(
+            currentConnection,
+            scopedStream.split('/')[0],
+            scopedStream.split('/')[1]
+        );
+        dispatch(delStream(scopedStream));
+        dispatch(
+            deletePreview({
+                connection: currentConnection,
+                scopedStream,
+            })
+        );
+        navigate(`/connection/${currentConnection}/overview`, {
+            replace: true,
+        });
+        // no more redirect to this deleted stream
+        e.preventDefault();
+    };
+
     const currentTab = `/connection/${currentConnection}/${connections[currentConnection].currentTab}`;
 
     return (
@@ -106,24 +129,12 @@ const ConnectionTabs = () => {
                                             )
                                         }
                                         <IconButton
-                                            onClick={(e) => {
-                                                dispatch(
-                                                    delStream(scopedStream)
-                                                );
-                                                dispatch(
-                                                    deletePreview({
-                                                        connection:
-                                                            currentConnection,
-                                                        scopedStream,
-                                                    })
-                                                );
-                                                navigate(
-                                                    `/connection/${currentConnection}/overview`,
-                                                    { replace: true }
-                                                );
-                                                // no more redirect to this deleted stream
-                                                e.preventDefault();
-                                            }}
+                                            onClick={(e) =>
+                                                handleCloseScopedStream(
+                                                    e,
+                                                    scopedStream
+                                                )
+                                            }
                                             sx={{ padding: 0 }}
                                         >
                                             <CloseIcon

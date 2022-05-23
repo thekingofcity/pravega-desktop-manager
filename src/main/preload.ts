@@ -80,8 +80,13 @@ contextBridge.exposeInMainWorld('electron', {
             stream: string,
             events: string[]
         ) => ipcRenderer.send('write-events', [name, scope, stream, events]),
-        createReader: (name: string, scope: string, stream: string) =>
-            ipcRenderer.send('create-reader', [name, scope, stream]),
+        createReader: (
+            name: string,
+            scope: string,
+            stream: string,
+            streamCut: 'head' | 'tail' | string
+        ) =>
+            ipcRenderer.send('create-reader', [name, scope, stream, streamCut]),
         setWhichStreamToRead: (name: string, scope?: string, stream?: string) =>
             ipcRenderer.send('set-which-stream-to-read', [name, scope, stream]),
         registerReadCallback: (
@@ -97,5 +102,13 @@ contextBridge.exposeInMainWorld('electron', {
             ipcRenderer.removeAllListeners('read-events');
             ipcRenderer.on('read-events', callback);
         },
+        cleanReadersAndWriters: (name: string, scope: string, stream: string) =>
+            ipcRenderer.send('clean-readers-and-writers', [
+                name,
+                scope,
+                stream,
+            ]),
+        resetAllReadersAndWriters: () =>
+            ipcRenderer.send('reset-all-readers-and-writers'),
     },
 });

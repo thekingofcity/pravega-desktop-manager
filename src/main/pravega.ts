@@ -174,7 +174,7 @@ const handleIPC = (
                     managerPool[name].manager.create_writer(scope, stream)
                 );
             }
-            log.info(`Create writer`);
+            log.info(`Create writer on ${scope}/${stream}`);
         }
     );
     ipcMain.on(
@@ -202,9 +202,9 @@ const handleIPC = (
         'create-reader',
         async (
             _: Electron.IpcMainInvokeEvent,
-            arg: [string, string, string]
+            arg: [string, string, string, 'head' | 'tail' | string]
         ) => {
-            const [name, scope, stream] = arg;
+            const [name, scope, stream, streamCut] = arg;
             if (!(name in managerPool)) {
                 throw new Error(`${name} is not in managerPool`);
             }
@@ -215,14 +215,13 @@ const handleIPC = (
                     writers: [],
                 };
             }
-            // log.info('Create reader group');
             const rw = managerPool[name].rw[`${scope}/${stream}`];
             if (rw.readerGroups.length === 0) {
                 const readerGroupName = Math.random().toString(36).slice(2, 10);
                 const readerGroup = managerPool[
                     name
                 ].manager.create_reader_group(
-                    StreamCut.tail(),
+                    streamCut === 'tail' ? StreamCut.tail() : StreamCut.head(),
                     readerGroupName,
                     scope,
                     stream
@@ -236,7 +235,9 @@ const handleIPC = (
                         .create_reader(Math.random().toString(36).slice(2, 10))
                 );
             }
-            log.info(`Create reader`);
+            log.info(
+                `Create reader on ${scope}/${stream} with stream cut ${streamCut}`
+            );
         }
     );
     ipcMain.on(
@@ -250,8 +251,29 @@ const handleIPC = (
                 throw new Error(`${name} is not in managerPool`);
             }
             scopedStreams = scope && stream ? `${scope}/${stream}` : undefined;
+            log.info(`Set ${scopedStreams} to read`);
         }
     );
+    ipcMain.on(
+        'clean-readers-and-writers',
+        async (
+            _: Electron.IpcMainInvokeEvent,
+            arg: [string, string, string]
+        ) => {
+            const [name, scope, stream] = arg;
+            if (!(name in managerPool)) {
+                throw new Error(`${name} is not in managerPool`);
+            }
+            delete managerPool[name].rw[`${scope}/${stream}`];
+            log.info(`Clean readers and writers of ${scopedStreams}`);
+        }
+    );
+    ipcMain.on('reset-all-readers-and-writers', async () => {
+        Object.values(managerPool).forEach((conn) => {
+            conn.rw = {};
+        });
+        log.info(`Reset all readers and writers`);
+    });
 };
 
 export default handleIPC;

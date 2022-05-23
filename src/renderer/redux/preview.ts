@@ -71,10 +71,19 @@ export const previewSlice = createSlice({
                 }
             }
         },
+        deleteAllPreviews: (state) => {
+            Object.values(state.connections).forEach((connection) => {
+                connection.preview = {};
+            });
+        },
     },
 });
 
-export const { updateAvailableStreams, updatePreview, deletePreview } =
-    previewSlice.actions;
+export const {
+    updateAvailableStreams,
+    updatePreview,
+    deletePreview,
+    deleteAllPreviews,
+} = previewSlice.actions;
 
 export default previewSlice.reducer;

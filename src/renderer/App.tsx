@@ -14,7 +14,7 @@ import MinimizeIcon from '@mui/icons-material/Minimize';
 import SideBar from './sidebar/sidebar';
 import ConnectionTabs from './view/connection/connection-tabs';
 import Connection from './view/connection/overview';
-import PreviewStream from './view/connection/preview-stream';
+import PreviewStream from './view/connection/preview/preview-stream';
 import Deployment from './view/deployment';
 import Explore from './view/explore';
 import Settings from './view/settings';

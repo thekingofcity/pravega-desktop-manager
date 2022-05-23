@@ -12,11 +12,13 @@ import {
     Typography,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import SettingsIcon from '@mui/icons-material/Settings';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import { useAppSelector, useAppDispatch } from '../../redux/store';
-import { setCurrentStream } from '../../redux/connection';
-import { updatePreview } from '../../redux/preview';
+import { useAppSelector, useAppDispatch } from '../../../redux/store';
+import { setCurrentStream } from '../../../redux/connection';
+import { updatePreview } from '../../../redux/preview';
+import AdvancedReadDialog from './dialogs';
 
 const PreviewStream = () => {
     const location = useLocation();
@@ -25,18 +27,93 @@ const PreviewStream = () => {
     const scope = location.pathname.split('/')[3];
     const stream = location.pathname.split('/')[4];
 
-    const { connections, currentConnection } = useAppSelector(
+    const { connections, currentConnection, advancedRead } = useAppSelector(
         (state) => state.connection
     );
     const { connections: previewConnection } = useAppSelector(
         (state) => state.preview
     );
 
+    // auto scroll the preview textarea to bottom
+    const previewData =
+        previewConnection[currentConnection]?.preview?.[`${scope}/${stream}`];
+    const textLog = React.useRef<HTMLTextAreaElement | null>(null);
+    React.useEffect(() => {
+        if (textLog.current)
+            textLog.current.scrollTop = textLog.current.scrollHeight;
+    }, [previewData]);
+
+    const [pause, setPause] = React.useState(false);
+
+    // advanced read open and opened
+    // open is used to control the dialog and opened is used to track whether
+    // the one-time option dialogs opened
+    const [advancedReadOpen, setAdvancedReadOpen] = React.useState(false);
+    const [advancedReadOpened, setAdvancedReadOpened] = React.useState(false);
+    const [automaticRead, setAutomaticRead] = React.useState(true);
+    const handleAdvancedRead = (
+        streamCut: 'head' | 'tail' | string,
+        autoRead: boolean
+    ) => {
+        setAdvancedReadOpen(false);
+        // we may already relied on batch updating to prevent unwanted
+        // setWhichStreamToRead call
+        setAdvancedReadOpened(true);
+        setAutomaticRead(autoRead);
+        setPause(!autoRead);
+        window.electron.pravega.createReader(
+            currentConnection,
+            scope,
+            stream,
+            streamCut
+        );
+    };
+
+    // set undefined on pause
+    React.useEffect(() => {
+        const read =
+            !pause &&
+            // no op when user does not set where to read
+            !(advancedRead && !advancedReadOpened) &&
+            // no op when user set where to read but disable automaticRead
+            !(advancedRead && advancedReadOpened && !automaticRead);
+
+        window.electron.pravega.setWhichStreamToRead(
+            currentConnection,
+            read ? scope : undefined,
+            read ? stream : undefined
+        );
+    }, [
+        currentConnection,
+        scope,
+        stream,
+        pause,
+        advancedRead,
+        advancedReadOpened,
+        automaticRead,
+    ]);
+
+    // writer's pending data state
+    const [writeArea, setWriteArea] = React.useState('');
+    const handleWrite = () =>
+        window.electron.pravega.writeEvents(
+            currentConnection,
+            scope,
+            stream,
+            writeArea.split('\n')
+        );
+
+    // Reset if scope and stream changed
     React.useEffect(
         () => {
-            // Ss we are still using <Tabs>, so no custom operation in `navigate`,
+            // As we are still using <Tabs>, so no custom operation in `navigate`,
             // we need to manually set the currentStream on load or each change.
             dispatch(setCurrentStream(`${scope}/${stream}`));
+
+            // re-init on scopedStream change
+            setAdvancedReadOpened(false);
+            setAutomaticRead(true);
+            setPause(false);
 
             // only proceed if the scopedStream exists
             if (
@@ -46,11 +123,16 @@ const PreviewStream = () => {
             )
                 return;
 
-            window.electron.pravega.createReader(
-                currentConnection,
-                scope,
-                stream
-            );
+            // only create reader on tail when advancedRead is not enabled
+            if (!advancedRead) {
+                window.electron.pravega.createReader(
+                    currentConnection,
+                    scope,
+                    stream,
+                    'tail'
+                );
+            }
+
             window.electron.pravega.createWriter(
                 currentConnection,
                 scope,
@@ -97,35 +179,6 @@ const PreviewStream = () => {
         []
     );
 
-    // auto scroll the preview textarea to bottom
-    const previewData =
-        previewConnection[currentConnection]?.preview?.[`${scope}/${stream}`];
-    const textLog = React.useRef<HTMLTextAreaElement | null>(null);
-    React.useEffect(() => {
-        if (textLog.current)
-            textLog.current.scrollTop = textLog.current.scrollHeight;
-    }, [previewData]);
-
-    // set undefined on pause
-    const [pause, setPause] = React.useState(false);
-    React.useEffect(() => {
-        window.electron.pravega.setWhichStreamToRead(
-            currentConnection,
-            pause ? undefined : scope,
-            pause ? undefined : stream
-        );
-    }, [currentConnection, scope, stream, pause]);
-
-    // writer's pending data state
-    const [writeArea, setWriteArea] = React.useState('');
-    const handleWrite = () =>
-        window.electron.pravega.writeEvents(
-            currentConnection,
-            scope,
-            stream,
-            writeArea.split('\n')
-        );
-
     return (
         <Box
             sx={{
@@ -164,7 +217,14 @@ const PreviewStream = () => {
                 color="primary"
                 sx={{ position: 'absolute', bottom: 176, right: 16 }}
             >
-                <IconButton onClick={() => setPause(!pause)}>
+                <IconButton
+                    onClick={() => {
+                        setPause(!pause);
+                        // no matter advancedRead and advancedReadOpened
+                        // set true to run setWhichStreamToRead correctly
+                        setAutomaticRead(true);
+                    }}
+                >
                     {pause ? (
                         <PlayArrowIcon sx={{ color: 'white' }} />
                     ) : (
@@ -172,6 +232,21 @@ const PreviewStream = () => {
                     )}
                 </IconButton>
             </Fab>
+            {advancedRead && !advancedReadOpened && (
+                <Fab
+                    color="primary"
+                    sx={{ position: 'absolute', bottom: 176, right: 16 }}
+                >
+                    <IconButton onClick={() => setAdvancedReadOpen(true)}>
+                        <SettingsIcon sx={{ color: 'white' }} />
+                    </IconButton>
+                </Fab>
+            )}
+            <AdvancedReadDialog
+                open={advancedReadOpen}
+                onClose={() => setAdvancedReadOpen(false)}
+                onSet={handleAdvancedRead}
+            />
 
             <Tabs value="Writer1">
                 <Tab label="Writer" value="Writer1" />

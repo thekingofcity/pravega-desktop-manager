@@ -53,7 +53,8 @@ declare global {
                 createReader: (
                     name: string,
                     scope: string,
-                    stream: string
+                    stream: string,
+                    streamCut: 'head' | 'tail' | string
                 ) => Promise<void>;
                 // If both scope and stream is undefined in the main process
                 // (undefined on initialization), the main process will not
@@ -71,6 +72,12 @@ declare global {
                         data: string[]
                     ) => void
                 ) => () => void;
+                cleanReadersAndWriters: (
+                    name: string,
+                    scope: string,
+                    stream: string
+                ) => Promise<void>;
+                resetAllReadersAndWriters: () => Promise<void>;
             };
         };
     }
