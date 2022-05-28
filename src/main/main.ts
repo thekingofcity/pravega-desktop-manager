@@ -63,11 +63,7 @@ const installExtensions = async () => {
 
 const createWindow = async () => {
     if (isDevelopment) {
-        // this need proxy
-        // await installExtensions();
-        session.defaultSession.loadExtension(
-            'C:\\Users\\Zhongle_Wang\\Documents\\electron-react-boilerplate-main\\extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd-3.0.11'
-        );
+        await installExtensions();
     }
 
     const RESOURCES_PATH = app.isPackaged
