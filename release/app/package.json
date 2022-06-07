@@ -1,6 +1,6 @@
 {
     "name": "pravega-desktop-manager",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Manage your Pravega in this GUI client. Compatible with Linux, Windows, Mac.",
     "main": "./dist/main/main.js",
     "author": {
