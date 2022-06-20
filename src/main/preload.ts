@@ -64,6 +64,25 @@ contextBridge.exposeInMainWorld('electron', {
                 [name]
             );
         },
+        getMetrics: (
+            callback: (
+                event: Electron.IpcRendererEvent,
+                name: string,
+                metrics: { [key: string]: number }
+            ) => void
+        ) => {
+            ipcRenderer.on(
+                'metrics',
+                (
+                    e: IpcRendererEvent,
+                    n: string,
+                    metrics: { [key: string]: number }
+                ) => {
+                    ipcRenderer.off('metrics', callback);
+                    callback(e, n, metrics);
+                }
+            );
+        },
         createScope: (name: string, scope: string) =>
             ipcRenderer.invoke('create-pravega-scope', [name, scope]),
         createStream: (name: string, scope: string, stream: string) =>

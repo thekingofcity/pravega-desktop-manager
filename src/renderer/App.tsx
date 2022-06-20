@@ -14,6 +14,7 @@ import MinimizeIcon from '@mui/icons-material/Minimize';
 import SideBar from './sidebar/sidebar';
 import ConnectionTabs from './view/connection/connection-tabs';
 import Connection from './view/connection/overview';
+import DetailedMetrics from './view/connection/detailed-metrics/detailed-metrics';
 import PreviewStream from './view/connection/preview/preview-stream';
 import Deployment from './view/deployment';
 import Explore from './view/explore';
@@ -100,6 +101,10 @@ export default function App() {
                                             element={<PreviewStream />}
                                         />
                                     </Route>
+                                    <Route
+                                        path="metrics"
+                                        element={<DetailedMetrics />}
+                                    />
                                     <Route
                                         path="overview"
                                         element={<Connection />}

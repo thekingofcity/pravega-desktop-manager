@@ -16,6 +16,7 @@ import {
     setCurrentStream,
 } from '../../redux/connection';
 import { updateAvailableStreams, deletePreview } from '../../redux/preview';
+import { updateMetrics, clearMetrics } from '../../redux/metrics';
 
 const ConnectionTabs = () => {
     const location = useLocation();
@@ -30,6 +31,14 @@ const ConnectionTabs = () => {
     );
     const dispatch = useAppDispatch();
 
+    // remember the last connection so we can clear the metrics
+    // https://blog.logrocket.com/accessing-previous-props-state-react-hooks/
+    const prevConnectionRef = React.useRef<string>();
+    React.useEffect(() => {
+        prevConnectionRef.current = currentConnection;
+    }, [currentConnection]);
+
+    // update current connection on each location change
     React.useEffect(() => {
         dispatch(setCurrentConnection(location.pathname.split('/')[2]));
 
@@ -40,9 +49,9 @@ const ConnectionTabs = () => {
         }
     }, [dispatch, location.pathname]);
 
+    // update the node's currentConnection so that list scopes and streams will
+    // return the current connection's result.
     React.useEffect(() => {
-        // update the node's currentConnection so that list scopes and streams will
-        // return the current connection's result.
         window.electron.pravega.listScopesAndStreams(
             (_, name, scopeWithStreams) => {
                 dispatch(
@@ -54,6 +63,17 @@ const ConnectionTabs = () => {
             },
             currentConnection
         );
+
+        // It would be weird to have metrics before T-100 and then user
+        // switches to another connection and switches back at T.
+        // A gap would be in the data array but we have no way to know it,
+        // so just clear the array and record from T.
+        if (prevConnectionRef.current)
+            dispatch(clearMetrics(prevConnectionRef.current));
+
+        window.electron.pravega.getMetrics((_, name, metrics) => {
+            dispatch(updateMetrics({ connection: name, metrics }));
+        });
     }, [dispatch, currentConnection]);
 
     const handleCloseScopedStream = (
@@ -65,6 +85,7 @@ const ConnectionTabs = () => {
             scopedStream.split('/')[0],
             scopedStream.split('/')[1]
         );
+        // some clean up
         dispatch(delStream(scopedStream));
         dispatch(
             deletePreview({
@@ -72,6 +93,7 @@ const ConnectionTabs = () => {
                 scopedStream,
             })
         );
+        // redirect to overview, we can do better if we know the last viewed tab
         navigate(`/connection/${currentConnection}/overview`, {
             replace: true,
         });
@@ -105,6 +127,14 @@ const ConnectionTabs = () => {
                         onClick={() => dispatch(setCurrentStream('overview'))}
                         sx={{ color: 'white', WebkitAppRegion: 'no-drag' }}
                     />
+                    <Tab
+                        label="Metrics"
+                        value={`/connection/${currentConnection}/metrics`}
+                        to={`/connection/${currentConnection}/metrics`}
+                        component={RouterLink}
+                        onClick={() => dispatch(setCurrentStream('metrics'))}
+                        sx={{ color: 'white', WebkitAppRegion: 'no-drag' }}
+                    />
                     {connections[currentConnection].openedStreams.map(
                         (scopedStream) => (
                             <Tab
@@ -135,6 +165,7 @@ const ConnectionTabs = () => {
                                                     scopedStream
                                                 )
                                             }
+                                            // hide the space between text and icon
                                             sx={{ padding: 0 }}
                                         >
                                             <CloseIcon
@@ -149,6 +180,8 @@ const ConnectionTabs = () => {
                                 sx={{
                                     color: 'white',
                                     WebkitAppRegion: 'no-drag',
+                                    // unify the tab height with or with out IconButton
+                                    minHeight: 48,
                                 }}
                             />
                         )

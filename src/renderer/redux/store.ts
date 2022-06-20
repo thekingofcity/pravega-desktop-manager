@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import connectionReducer from './connection';
 import previewReducer from './preview';
+import metricsReducer from './metrics';
 
 const store = configureStore({
     reducer: {
         connection: connectionReducer,
         preview: previewReducer,
+        metrics: metricsReducer,
     },
 });
 export default store;

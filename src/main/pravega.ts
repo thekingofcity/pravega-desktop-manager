@@ -2,36 +2,42 @@ import log from 'electron-log';
 
 const { StreamManager, StreamCut } = require('@thekingofcity/pravega');
 
+import getMetrics from './metrics';
+
+export type ManagerPool = {
+    [name: string]: {
+        // no idea why cjs still does not understand type
+        // even if I set "types" in package.json
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        manager: any;
+        url: string;
+        // internal readerGroups, readers, writers of each stream
+        rw: {
+            [scopedStreams: string]: {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                readerGroups: any[];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                readers: any[];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                writers: any[];
+            };
+        };
+    };
+};
+
 const handleIPC = (
     ipcMain: Electron.IpcMain,
     mainWindow: Electron.BrowserWindow
 ) => {
     // runtime native object pool
-    const managerPool: {
-        [name: string]: {
-            manager: typeof StreamManager;
-            url: string;
-            // internal readerGroups, readers, writers of each stream
-            rw: {
-                [scopedStreams: string]: {
-                    // no idea why cjs still does not understand type
-                    // even if I set "types" in package.json
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    readerGroups: any[];
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    readers: any[];
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    writers: any[];
-                };
-            };
-        };
-    } = {};
+    const managerPool: ManagerPool = {};
     // evil global variable, but required for setTimeout
     let currentConnection: string | undefined;
     let scopedStreams: string | undefined;
 
-    // here we have 2 run forever code that will return immediately if the
+    // here we have 3 run forever code that will return immediately if the
     // above global variables are not set
+    // 1. fetch scopes and streams on current connection
     const listScopesAndStreams = async () => {
         const name = currentConnection;
         if (!name || !(name in managerPool)) {
@@ -64,6 +70,12 @@ const handleIPC = (
         setTimeout(listScopesAndStreams, 500);
     };
     setTimeout(listScopesAndStreams, 1000);
+    // 2. fetch metrics for every 1 second
+    setInterval(
+        () => getMetrics(currentConnection, managerPool, mainWindow),
+        1000
+    );
+    // 3. read more segments if we are on preview page
     const readEvents = async () => {
         const name = currentConnection;
         if (!name || !(name in managerPool) || !scopedStreams) {
@@ -81,14 +93,15 @@ const handleIPC = (
         const dec = new TextDecoder('utf-8');
         const segSlice = await reader.get_segment_slice();
         const events = [...segSlice].map((event) => dec.decode(event.data()));
-        if (events?.length > 0) log.info(`${scopedStreams} Reads: ${events}`);
+        if (events.length > 0) log.info(`${scopedStreams} Reads: ${events}`);
         mainWindow.webContents.send(`read-events`, name, scopedStreams, events);
         reader.release_segment(segSlice);
 
-        setTimeout(readEvents, 500);
+        setTimeout(readEvents, events.length ? 0 : 500);
     };
     setTimeout(readEvents, 1000);
 
+    // listen to IPC messages sent from the renderer process
     ipcMain.handle(
         'new-pravega-manager',
         (
@@ -104,6 +117,7 @@ const handleIPC = (
                 rw: {},
                 url,
             };
+            log.info(`Create manager for ${id} at ${url}`);
             return managerPool[id].manager.toString();
         }
     );

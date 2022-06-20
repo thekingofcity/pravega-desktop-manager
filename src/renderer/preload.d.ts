@@ -27,6 +27,13 @@ declare global {
                     ) => void,
                     name: string
                 ) => Promise<void>;
+                getMetrics: (
+                    callback: (
+                        event: Electron.IpcRendererEvent,
+                        name: string,
+                        metrics: { [key: string]: number }
+                    ) => void
+                ) => Promise<void>;
                 createScope: (name: string, scope: string) => Promise<boolean>;
                 createStream: (
                     name: string,

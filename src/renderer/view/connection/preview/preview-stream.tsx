@@ -106,7 +106,7 @@ const PreviewStream = () => {
     // Reset if scope and stream changed
     React.useEffect(
         () => {
-            // As we are still using <Tabs>, so no custom operation in `navigate`,
+            // As we are still using <Tabs>, there is no custom operation in `navigate`,
             // we need to manually set the currentStream on load or each change.
             dispatch(setCurrentStream(`${scope}/${stream}`));
 
@@ -185,7 +185,7 @@ const PreviewStream = () => {
                 marginLeft: 2,
                 marginRight: 2,
                 paddingTop: 1,
-                height: 'calc(100% - 90px)',
+                height: 'calc(100% - 70px)',
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -215,7 +215,7 @@ const PreviewStream = () => {
             />
             <Fab
                 color="primary"
-                sx={{ position: 'absolute', bottom: 176, right: 16 }}
+                sx={{ position: 'absolute', bottom: 180, right: 16 }}
             >
                 <IconButton
                     onClick={() => {
@@ -235,7 +235,7 @@ const PreviewStream = () => {
             {advancedRead && !advancedReadOpened && (
                 <Fab
                     color="primary"
-                    sx={{ position: 'absolute', bottom: 176, right: 16 }}
+                    sx={{ position: 'absolute', bottom: 180, right: 16 }}
                 >
                     <IconButton onClick={() => setAdvancedReadOpen(true)}>
                         <SettingsIcon sx={{ color: 'white' }} />

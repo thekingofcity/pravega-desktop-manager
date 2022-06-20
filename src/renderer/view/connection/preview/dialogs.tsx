@@ -77,7 +77,9 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
                     >
                         <MenuItem value="head">Head</MenuItem>
                         <MenuItem value="tail">Tail</MenuItem>
-                        <MenuItem value="streamcut">Stream Cut</MenuItem>
+                        <MenuItem value="streamcut" disabled>
+                            Stream Cut
+                        </MenuItem>
                     </TextField>
                     <TextField
                         label="Specified Stream Cut"
