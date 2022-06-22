@@ -1,15 +1,18 @@
+import { Channels } from 'main/preload';
+
 declare global {
     interface Window {
         electron: {
             ipcRenderer: {
-                myPing(): void;
                 minimizeWindow(): void;
                 maximizeWindow(): void;
                 closeWindow(): void;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                on(channel: string, func: (...args: any[]) => void): void;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                once(channel: string, func: (...args: any[]) => void): void;
+                sendMessage(channel: Channels, args: unknown[]): void;
+                on(
+                    channel: string,
+                    func: (...args: unknown[]) => void
+                ): (() => void) | undefined;
+                once(channel: string, func: (...args: unknown[]) => void): void;
             };
             pravega: {
                 newPravega: (

@@ -1,28 +1,26 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
+export type Channels = 'ipc-example';
+
 contextBridge.exposeInMainWorld('electron', {
     ipcRenderer: {
-        myPing() {
-            ipcRenderer.send('ipc-example', 'ping');
-        },
         minimizeWindow: () => ipcRenderer.send('minimize-window'),
         maximizeWindow: () => ipcRenderer.send('maximize-window'),
         closeWindow: () => ipcRenderer.send('close-window'),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        on(channel: string, func: (...args: any[]) => void) {
-            const validChannels = ['ipc-example'];
-            if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender`
-                ipcRenderer.on(channel, (_event, ...args) => func(...args));
-            }
+        sendMessage(channel: Channels, args: unknown[]) {
+            ipcRenderer.send(channel, args);
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        once(channel: string, func: (...args: any[]) => void) {
-            const validChannels = ['ipc-example'];
-            if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender`
-                ipcRenderer.once(channel, (_event, ...args) => func(...args));
-            }
+        on(channel: Channels, func: (...args: unknown[]) => void) {
+            const subscription = (
+                _event: IpcRendererEvent,
+                ...args: unknown[]
+            ) => func(...args);
+            ipcRenderer.on(channel, subscription);
+
+            return () => ipcRenderer.removeListener(channel, subscription);
+        },
+        once(channel: Channels, func: (...args: unknown[]) => void) {
+            ipcRenderer.once(channel, (_event, ...args) => func(...args));
         },
     },
     pravega: {

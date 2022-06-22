@@ -1,7 +1,7 @@
 import log from 'electron-log';
 import fetch from 'node-fetch';
 
-import { ManagerPool } from './pravega';
+import { ManagerPool } from './types';
 
 const METRICS_KEYS = [
     /pravega_segmentstore_segment_read_bytes_global_total/,
