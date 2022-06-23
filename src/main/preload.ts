@@ -1,5 +1,7 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
+import { CreateStreamArguments } from './types';
+
 export type Channels = 'ipc-example';
 
 contextBridge.exposeInMainWorld('electron', {
@@ -83,8 +85,8 @@ contextBridge.exposeInMainWorld('electron', {
         },
         createScope: (name: string, scope: string) =>
             ipcRenderer.invoke('create-pravega-scope', [name, scope]),
-        createStream: (name: string, scope: string, stream: string) =>
-            ipcRenderer.invoke('create-pravega-stream', [name, scope, stream]),
+        createStream: (...args: CreateStreamArguments) =>
+            ipcRenderer.invoke('create-pravega-stream', args),
         deleteScope: (name: string, scope: string) =>
             ipcRenderer.invoke('delete-pravega-scope', [name, scope]),
         deleteStream: (name: string, scope: string, stream: string) =>

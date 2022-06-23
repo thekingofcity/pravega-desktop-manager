@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { CreateStreamArgumentsExceptFirstTwo } from 'main/types';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
 import { addStream, delStream } from '../../redux/connection';
 import { updatePreview } from '../../redux/preview';
@@ -175,11 +176,13 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
         window.electron.pravega.createScope(currentConnection, scopeName);
     };
     const [isAddStreamOpen, setIsAddStreamOpen] = React.useState(false);
-    const handleAddStream = async (streamName: string) => {
+    const handleAddStream = async (
+        ...args: CreateStreamArgumentsExceptFirstTwo
+    ) => {
         window.electron.pravega.createStream(
             currentConnection,
             currentScope,
-            streamName
+            ...args
         );
     };
     const [removeScopeOrStreamType, setRemoveScopeOrStreamType] =

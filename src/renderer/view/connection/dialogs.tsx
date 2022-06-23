@@ -10,6 +10,7 @@ import {
     MenuItem,
     TextField,
 } from '@mui/material';
+import { CreateStreamArgumentsExceptFirstTwo } from 'main/types';
 
 interface AddScopeDialogProps {
     open: boolean;
@@ -65,7 +66,7 @@ export const AddScopeDialog = (props: AddScopeDialogProps) => {
 interface AddStreamDialogProps {
     open: boolean;
     onClose: () => void;
-    onAdd: (streamName: string) => Promise<void>;
+    onAdd: (...args: CreateStreamArgumentsExceptFirstTwo) => Promise<void>;
 }
 
 export const AddStreamDialog = (props: AddStreamDialogProps) => {
@@ -73,10 +74,10 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
 
     const [streamName, setStreamName] = React.useState('');
     const [retentionPolicy, setRetentionPolicy] = React.useState(
-        'none' as 'none' | 'size' | 'time'
+        'none' as 'none' | 'by_size' | 'by_time'
     );
     const [scalingPolicy, setScalingPolicy] = React.useState(
-        'fixed' as 'fixed' | 'data' | 'event'
+        'fixed' as 'fixed' | 'by_data_rate' | 'by_event_rate'
     );
     const [retentionValue, setRetentionValue] = React.useState(0);
     const [initialSegments, setInitialSegments] = React.useState(1);
@@ -95,7 +96,16 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
     }, [open]);
 
     const handleAdd = async () => {
-        await onAdd(streamName);
+        await onAdd(
+            streamName,
+            retentionPolicy,
+            retentionValue,
+            scalingPolicy,
+            scalingValue,
+            scaleFactor,
+            initialSegments,
+            []
+        );
         onClose();
     };
 
@@ -126,19 +136,15 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         label="Retention Policy"
                         onChange={(e) =>
                             setRetentionPolicy(
-                                e.target.value as 'none' | 'size' | 'time'
+                                e.target.value as 'none' | 'by_size' | 'by_time'
                             )
                         }
                         select // tell TextField to render select
                         sx={{ width: 150 }} // display the full text
                     >
                         <MenuItem value="none">None</MenuItem>
-                        <MenuItem value="size" disabled>
-                            By Size
-                        </MenuItem>
-                        <MenuItem value="time" disabled>
-                            By Time
-                        </MenuItem>
+                        <MenuItem value="by_size">By Size</MenuItem>
+                        <MenuItem value="by_time">By Time</MenuItem>
                     </TextField>
                     <TextField
                         label="Size in bytes"
@@ -146,7 +152,7 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         onChange={({ target: { value } }) =>
                             setRetentionValue(Number(value.replace(/\D/g, '')))
                         }
-                        sx={retentionPolicy !== 'size' ? hidden : {}}
+                        sx={retentionPolicy !== 'by_size' ? hidden : {}}
                     />
                     <TextField
                         label="Time in milliseconds"
@@ -154,7 +160,7 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         onChange={({ target: { value } }) =>
                             setRetentionValue(Number(value.replace(/\D/g, '')))
                         }
-                        sx={retentionPolicy !== 'time' ? hidden : {}}
+                        sx={retentionPolicy !== 'by_time' ? hidden : {}}
                     />
                 </Box>
                 <Box
@@ -169,17 +175,20 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         label="Scaling Policy"
                         onChange={(e) =>
                             setScalingPolicy(
-                                e.target.value as 'fixed' | 'data' | 'event'
+                                e.target.value as
+                                    | 'fixed'
+                                    | 'by_data_rate'
+                                    | 'by_event_rate'
                             )
                         }
                         select // tell TextField to render select
                         sx={{ width: 150 }} // display the full text
                     >
                         <MenuItem value="fixed">Fixed</MenuItem>
-                        <MenuItem value="data" disabled>
+                        <MenuItem value="by_data_rate">
                             Auto scale by data rate
                         </MenuItem>
-                        <MenuItem value="event" disabled>
+                        <MenuItem value="by_event_rate">
                             Auto scale by event rate
                         </MenuItem>
                     </TextField>
@@ -187,8 +196,7 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         label="Initial Segments"
                         value={initialSegments}
                         onChange={({ target: { value } }) =>
-                            // setInitialSegments(Number(value.replace(/\D/g, '')))
-                            setInitialSegments(1)
+                            setInitialSegments(Number(value.replace(/\D/g, '')))
                         }
                     />
                     <TextField
@@ -197,7 +205,7 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         onChange={({ target: { value } }) =>
                             setScalingValue(Number(value.replace(/\D/g, '')))
                         }
-                        sx={scalingPolicy !== 'data' ? hidden : {}}
+                        sx={scalingPolicy !== 'by_data_rate' ? hidden : {}}
                     />
                     <TextField
                         label="Target events per second"
@@ -205,7 +213,7 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         onChange={({ target: { value } }) =>
                             setScalingValue(Number(value.replace(/\D/g, '')))
                         }
-                        sx={scalingPolicy !== 'event' ? hidden : {}}
+                        sx={scalingPolicy !== 'by_event_rate' ? hidden : {}}
                     />
                     <TextField
                         label="Scale factor"

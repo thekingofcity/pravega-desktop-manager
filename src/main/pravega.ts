@@ -1,9 +1,14 @@
 import log from 'electron-log';
 
-import { ManagerPool } from './types';
+import { ManagerPool, CreateStreamArguments } from './types';
 import getMetrics from './metrics';
 
-const { StreamManager, StreamCut } = require('@thekingofcity/pravega');
+const {
+    StreamManager,
+    StreamCut,
+    StreamRetentionPolicy,
+    StreamScalingPolicy,
+} = require('@thekingofcity/pravega');
 
 const handleIPC = (
     ipcMain: Electron.IpcMain,
@@ -86,14 +91,14 @@ const handleIPC = (
         'new-pravega-manager',
         (
             _: Electron.IpcMainInvokeEvent,
-            arg: [string, string, boolean, boolean, boolean]
+            args: [string, string, boolean, boolean, boolean]
         ) => {
-            const [id, url, ...args] = arg;
+            const [id, url, ...arg] = args;
             if (id in managerPool && url === managerPool[id].url) {
                 return managerPool[id].manager.toString();
             }
             managerPool[id] = {
-                manager: StreamManager(url, ...args),
+                manager: StreamManager(url, ...arg),
                 rw: {},
                 url,
             };
@@ -103,14 +108,14 @@ const handleIPC = (
     );
     ipcMain.on(
         'set-which-connection-to-list-scopes-and-streams',
-        async (_: Electron.IpcMainInvokeEvent, arg: [string]) => {
-            [currentConnection] = arg;
+        async (_: Electron.IpcMainInvokeEvent, args: [string]) => {
+            [currentConnection] = args;
         }
     );
     ipcMain.handle(
         'create-pravega-scope',
-        (_: Electron.IpcMainInvokeEvent, arg: [string, string]) => {
-            const [name, scope] = arg;
+        (_: Electron.IpcMainInvokeEvent, args: [string, string]) => {
+            const [name, scope] = args;
             if (name in managerPool) {
                 return managerPool[name].manager.create_scope(scope);
             }
@@ -119,18 +124,68 @@ const handleIPC = (
     );
     ipcMain.handle(
         'create-pravega-stream',
-        (_: Electron.IpcMainInvokeEvent, arg: [string, string, string]) => {
-            const [name, scope, stream] = arg;
+        (_: Electron.IpcMainInvokeEvent, args: CreateStreamArguments) => {
+            const [
+                name,
+                scope,
+                stream,
+                streamRetentionPolicyType,
+                value1,
+                streamScalingPolicyType,
+                value2,
+                scaleFactor,
+                initialSegments,
+                tags,
+            ] = args;
             if (name in managerPool) {
-                return managerPool[name].manager.create_stream(scope, stream);
+                let streamRetentionPolicy: typeof StreamRetentionPolicy;
+                if (streamRetentionPolicyType === 'none') {
+                    streamRetentionPolicy = StreamRetentionPolicy.none();
+                } else if (streamRetentionPolicyType === 'by_size') {
+                    streamRetentionPolicy =
+                        StreamRetentionPolicy.by_size(value1);
+                } else if (streamRetentionPolicyType === 'by_time') {
+                    streamRetentionPolicy =
+                        StreamRetentionPolicy.by_time(value1);
+                }
+                let streamScalingPolicy: typeof StreamScalingPolicy;
+                if (streamScalingPolicyType === 'fixed') {
+                    streamScalingPolicy =
+                        StreamScalingPolicy.fixed_scaling_policy(
+                            initialSegments
+                        );
+                } else if (streamScalingPolicyType === 'by_data_rate') {
+                    streamScalingPolicy =
+                        StreamScalingPolicy.auto_scaling_policy_by_data_rate(
+                            value2,
+                            scaleFactor,
+                            initialSegments
+                        );
+                } else if (streamScalingPolicyType === 'by_event_rate') {
+                    streamScalingPolicy =
+                        StreamScalingPolicy.auto_scaling_policy_by_event_rate(
+                            value2,
+                            scaleFactor,
+                            initialSegments
+                        );
+                }
+                if (!streamRetentionPolicy || !streamScalingPolicy)
+                    throw new Error(`Unknown policy to create a stream`);
+                return managerPool[name].manager.create_stream(
+                    scope,
+                    stream,
+                    streamRetentionPolicy,
+                    streamScalingPolicy,
+                    tags ?? []
+                );
             }
             throw new Error(`${name} is not in managerPool`);
         }
     );
     ipcMain.handle(
         'delete-pravega-scope',
-        (_: Electron.IpcMainInvokeEvent, arg: [string, string, string]) => {
-            const [name, scope] = arg;
+        (_: Electron.IpcMainInvokeEvent, args: [string, string, string]) => {
+            const [name, scope] = args;
             if (name in managerPool) {
                 return managerPool[name].manager.delete_scope(scope);
             }
@@ -139,8 +194,8 @@ const handleIPC = (
     );
     ipcMain.handle(
         'delete-pravega-stream',
-        (_: Electron.IpcMainInvokeEvent, arg: [string, string, string]) => {
-            const [name, scope, stream] = arg;
+        (_: Electron.IpcMainInvokeEvent, args: [string, string, string]) => {
+            const [name, scope, stream] = args;
             if (name in managerPool) {
                 managerPool[name].manager.seal_stream(scope, stream);
                 return managerPool[name].manager.delete_stream(scope, stream);
@@ -150,8 +205,8 @@ const handleIPC = (
     );
     ipcMain.handle(
         'create-writer',
-        (_: Electron.IpcMainInvokeEvent, arg: [string, string, string]) => {
-            const [name, scope, stream] = arg;
+        (_: Electron.IpcMainInvokeEvent, args: [string, string, string]) => {
+            const [name, scope, stream] = args;
             if (!(name in managerPool)) {
                 throw new Error(`${name} is not in managerPool`);
             }
@@ -175,9 +230,9 @@ const handleIPC = (
         'write-events',
         async (
             _: Electron.IpcMainInvokeEvent,
-            arg: [string, string, string, string[]]
+            args: [string, string, string, string[]]
         ) => {
-            const [name, scope, stream, events] = arg;
+            const [name, scope, stream, events] = args;
             if (!(name in managerPool)) {
                 throw new Error(`${name} is not in managerPool`);
             }
@@ -196,9 +251,9 @@ const handleIPC = (
         'create-reader',
         async (
             _: Electron.IpcMainInvokeEvent,
-            arg: [string, string, string, 'head' | 'tail' | string]
+            args: [string, string, string, 'head' | 'tail' | string]
         ) => {
-            const [name, scope, stream, streamCut] = arg;
+            const [name, scope, stream, streamCut] = args;
             if (!(name in managerPool)) {
                 throw new Error(`${name} is not in managerPool`);
             }
@@ -238,9 +293,9 @@ const handleIPC = (
         'set-which-stream-to-read',
         async (
             _: Electron.IpcMainInvokeEvent,
-            arg: [string, string | undefined, string | undefined]
+            args: [string, string | undefined, string | undefined]
         ) => {
-            const [name, scope, stream] = arg;
+            const [name, scope, stream] = args;
             if (!(name in managerPool)) {
                 throw new Error(`${name} is not in managerPool`);
             }
@@ -252,9 +307,9 @@ const handleIPC = (
         'clean-readers-and-writers',
         async (
             _: Electron.IpcMainInvokeEvent,
-            arg: [string, string, string]
+            args: [string, string, string]
         ) => {
-            const [name, scope, stream] = arg;
+            const [name, scope, stream] = args;
             if (!(name in managerPool)) {
                 throw new Error(`${name} is not in managerPool`);
             }

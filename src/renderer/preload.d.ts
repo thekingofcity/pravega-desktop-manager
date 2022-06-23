@@ -1,4 +1,5 @@
 import { Channels } from 'main/preload';
+import { CreateStream } from 'main/types';
 
 declare global {
     interface Window {
@@ -38,11 +39,7 @@ declare global {
                     ) => void
                 ) => Promise<void>;
                 createScope: (name: string, scope: string) => Promise<boolean>;
-                createStream: (
-                    name: string,
-                    scope: string,
-                    stream: string
-                ) => Promise<boolean>;
+                createStream: CreateStream;
                 deleteScope: (name: string, scope: string) => Promise<boolean>;
                 deleteStream: (
                     name: string,
