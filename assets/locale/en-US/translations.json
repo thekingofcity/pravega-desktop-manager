@@ -1,0 +1,176 @@
+{
+    "sidebar": {
+        "connection": "Connection",
+        "deployment": "Deployment",
+        "explore": "Explore",
+        "settings": "Settings",
+        "dialogs": {
+            "create": {
+                "title": "Add a new connection",
+                "name": "Name",
+                "protocol": "Protocol",
+                "url": "Url",
+                "port": "Port",
+                "cancel": "Cancel",
+                "confirm": "Add"
+            },
+            "edit": {
+                "title": "Edit this connection",
+                "name": "Name",
+                "protocol": "Protocol",
+                "url": "Url",
+                "port": "Port",
+                "cancel": "Cancel",
+                "confirm": "Save"
+            },
+            "delete": {
+                "title": "Delete this connection?",
+                "content": "This can not be undone.",
+                "cancel": "Cancel",
+                "confirm": "Delete"
+            }
+        }
+    },
+    "home": "You may add or choose a Pravega connection in the left sidebar.",
+    "notfound": "Nothing here. Current route:",
+    "views": {
+        "connection": {
+            "tabs": {
+                "overview": "Overview",
+                "metrics": "Metrics"
+            },
+            "overview": {
+                "metrics": {
+                    "title": "Metrics",
+                    "details": "See details"
+                },
+                "scopesAndStreamsNavigator": {
+                    "title": "Scopes and Streams"
+                },
+                "dialogs": {
+                    "createScope": {
+                        "title": "Create a new Scope",
+                        "scopeName": "Scope Name",
+                        "cancel": "Cancel",
+                        "confirm": "Add"
+                    },
+                    "createStream": {
+                        "title": "Create a new Stream",
+                        "streamName": "Stream Name",
+                        "retention": {
+                            "name": "Retention Policy",
+                            "none": "None",
+                            "size": "By Size",
+                            "time": "By Time",
+                            "sizeValue": "Size in bytes",
+                            "timeValue": "Time in milliseconds"
+                        },
+                        "scaling": {
+                            "name": "Scaling Policy",
+                            "fixed": "Fixed",
+                            "data": "Auto scale by data rate",
+                            "event": "Auto scale by event rate",
+                            "initialSegments": "Initial Segments",
+                            "dataValue": "Target kbytes per second",
+                            "eventValue": "Target events per second",
+                            "scaleFactor": "Scale Factor"
+                        },
+                        "cancel": "Cancel",
+                        "confirm": "Add"
+                    },
+                    "delete": {
+                        "titleScope": "Delete {{ scope }}?",
+                        "titleStream": "Seal and Delete {{ scope }}/{{ stream }}?",
+                        "content1": "All streams in this scope need to be deleted first.",
+                        "content2": "This can not be undone.",
+                        "cancel": "Cancel",
+                        "confirm": "Delete"
+                    }
+                }
+            },
+            "metrics": {
+                "title": "Metrics over last one minute",
+                "content1": "There is no metrics available right now.",
+                "content2": "To expose metrics, set <code>singlenode.metrics.enable</code> and <code>singlenode.metrics.prometheus.enable</code> to <code>true</code> in the <code>config.properties</code>."
+            },
+            "preview": {
+                "title": "Preview",
+                "decoders": {
+                    "utf8": "SimpleUtf8Decoder"
+                },
+                "writer": "Writer",
+                "placeholder": "Write something to the stream!",
+                "dialogs": {
+                    "advancedReadOptions": {
+                        "title": "Advanced read options",
+                        "readFrom": "Where would you like to read from?",
+                        "position": "Position",
+                        "head": "Head",
+                        "tail": "Tail",
+                        "streamCut": "Stream Cut",
+                        "streamCutValue": "Specified Stream Cut",
+                        "readAutomatically": "Start read automatically?",
+                        "confirm": "Set"
+                    }
+                }
+            }
+        },
+        "deployment": {
+            "title": "Pravega is available in the following environments",
+            "local": "Local",
+            "remote": "Remote",
+            "standalone": {
+                "title": "Standalone",
+                "content1": "Standalone provides full controls to play with Pravega.",
+                "content2": "But the data will be lost after restart since they are stored in the memory.",
+                "step1": "1. Java 11+",
+                "step2": "2. Pravega installed",
+                "step3": "3. Pravega running",
+                "status1": "Detected",
+                "status2": "Installed",
+                "status3": "Running",
+                "action1": "Install",
+                "action2": "Install",
+                "action3": "Run"
+            },
+            "dockerCompose": {
+                "title": "Docker Compose",
+                "content1": "It is the simplest way to start Pravega and manages all the relating services and configuration for you.",
+                "content2": "Data will be preserved in the container.",
+                "step1": "1. Docker",
+                "step2": "2. Pravega running",
+                "status1": "Detected",
+                "status2": "Running",
+                "action1": "Install",
+                "action2": "Run"
+            },
+            "cluster": {
+                "title": "Pravega Cluster",
+                "content1": "Our professional will take care of everything needed to run a Pravega cluster.",
+                "content2": "No worries about resources, they are unlimited on the cloud!",
+                "content3": "What you need is to name a few streams and connect.",
+                "action": "See Instructions"
+            }
+        },
+        "explore": {
+            "cdc": {
+                "title": "Change Data Capture",
+                "content1": "Change logs are pulled from database and ingest to Pravega.",
+                "content2": "Process the change logs as streaming events and persist.",
+                "content3": "Analyze the change logs and rebuild the materialized view with Flink.",
+                "action": "See Instructions"
+            }
+        },
+        "settings": {
+            "title": "Settings",
+            "advancedReadOptions": "Read stream with advanced options",
+            "languages": {
+                "name": "Language",
+                "en-US": "English",
+                "zh-CN": "Chinese Simplified",
+                "ja-JP": "Japanese",
+                "ko-KR": "Korean"
+            }
+        }
+    }
+}

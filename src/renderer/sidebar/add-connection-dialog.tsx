@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -15,6 +16,8 @@ interface AddConnectionDialogProps {
 }
 
 const AddConnectionDialog = (props: AddConnectionDialogProps) => {
+    const { t } = useTranslation();
+
     const { open, onClose, onAdd } = props;
 
     const [name, setName] = React.useState('pravega1');
@@ -36,12 +39,12 @@ const AddConnectionDialog = (props: AddConnectionDialogProps) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Add a new connection</DialogTitle>
+            <DialogTitle>{t('sidebar.dialogs.create.title')}</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Name"
+                    label={t('sidebar.dialogs.create.name')}
                     value={name}
                     onChange={({ target: { value } }) => setName(value)}
                     variant="outlined"
@@ -51,7 +54,7 @@ const AddConnectionDialog = (props: AddConnectionDialogProps) => {
                     <TextField
                         select
                         required
-                        label="Protocol"
+                        label={t('sidebar.dialogs.create.protocol')}
                         value={mode}
                         margin="dense"
                         onChange={(e) => setMode(e.target.value)}
@@ -67,7 +70,7 @@ const AddConnectionDialog = (props: AddConnectionDialogProps) => {
                         autoFocus
                         required
                         margin="dense"
-                        label="Url"
+                        label={t('sidebar.dialogs.create.url')}
                         value={url}
                         onChange={({ target: { value } }) => setUrl(value)}
                         variant="outlined"
@@ -76,7 +79,7 @@ const AddConnectionDialog = (props: AddConnectionDialogProps) => {
                     <TextField
                         required
                         margin="dense"
-                        label="Port"
+                        label={t('sidebar.dialogs.create.port')}
                         value={port}
                         onChange={({ target: { value } }) =>
                             setPort(value.replace(/\D/g, ''))
@@ -88,10 +91,10 @@ const AddConnectionDialog = (props: AddConnectionDialogProps) => {
             </DialogContent>
             <DialogActions sx={{ padding: 3 }}>
                 <Button onClick={onClose} variant="contained">
-                    Cancel
+                    {t('sidebar.dialogs.create.cancel')}
                 </Button>
                 <Button onClick={handleAdd} variant="contained" color="error">
-                    Add
+                    {t('sidebar.dialogs.create.confirm')}
                 </Button>
             </DialogActions>
         </Dialog>

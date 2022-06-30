@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     List,
@@ -6,6 +7,8 @@ import {
     ListItemText,
     ListItemIcon,
     ListSubheader,
+    MenuItem,
+    Select as SelectUI,
     SvgIcon,
     Switch as SwitchUI,
 } from '@mui/material';
@@ -13,20 +16,24 @@ import { useTheme } from '@mui/material/styles';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { useAppSelector, useAppDispatch } from '../redux/store';
-import { setAdvancedRead, resetAll } from '../redux/connection';
+import { setAdvancedRead, setLanguage, Lang } from '../redux/settings';
+import { resetAll } from '../redux/connection';
 import { deleteAllPreviews } from '../redux/preview';
 
 enum SettingType {
-    Title,
+    Section,
     Divider,
     Switch,
     Select,
 }
 
 const Settings = () => {
-    const theme = useTheme();
-    const { advancedRead } = useAppSelector((state) => state.connection);
+    const { advancedRead, language } = useAppSelector(
+        (state) => state.settings
+    );
     const dispatch = useAppDispatch();
+    const { t, i18n } = useTranslation();
+    const theme = useTheme();
 
     const [isReconnectOnStartup, setIsReconnectOnStartup] =
         React.useState(false);
@@ -40,28 +47,27 @@ const Settings = () => {
         icon?: typeof SvgIcon;
         onChange?: (value: string) => void;
     }[] = [
-        { type: SettingType.Title, label: 'Settings', value: '' },
         {
             type: SettingType.Select,
             value: '',
-            label: 'Language',
-            options: { 'en-us': 'en-US', 'zh-ch': 'zh-CN' },
+            label: t('views.settings.languages.name'),
+            options: {
+                'en-US': t('views.settings.languages.en-US'),
+                'zh-CN': t('views.settings.languages.zh-CN'),
+                'ja-JP': t('views.settings.languages.ja-JP'),
+                'ko-KR': t('views.settings.languages.ko-KR'),
+            },
             icon: TranslateIcon,
+            onChange: (value: string) => {
+                dispatch(setLanguage(value as Lang));
+                i18n.changeLanguage(value as Lang);
+            },
         },
         { type: SettingType.Divider, value: '' },
         {
             type: SettingType.Switch,
-            value: '',
-            label: 'Reconnect on startup',
-            hidden: true,
-            onChange: (value: string) => {
-                setIsReconnectOnStartup(value === 'true');
-            },
-        },
-        {
-            type: SettingType.Switch,
             value: String(advancedRead),
-            label: 'Read stream with advanced options',
+            label: t('views.settings.advancedReadOptions'),
             icon: SettingsBackupRestoreIcon,
             onChange: (value: string) => {
                 dispatch(setAdvancedRead(value === 'true'));
@@ -76,7 +82,13 @@ const Settings = () => {
     ];
 
     return (
-        <>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
             <Box
                 sx={{
                     top: 0,
@@ -90,16 +102,18 @@ const Settings = () => {
             <List
                 sx={{
                     width: '100%',
-                    maxWidth: 360,
+                    maxWidth: 500,
                     bgcolor: 'background.paper',
                 }}
-                subheader={<ListSubheader>Settings</ListSubheader>}
+                subheader={
+                    <ListSubheader>{t('views.settings.title')}</ListSubheader>
+                }
             >
                 {settingsItem
                     .filter((item) => !item.hidden)
-                    .map(
-                        (item) =>
-                            item.type === SettingType.Switch && (
+                    .map((item) => (
+                        <>
+                            {item.type === SettingType.Switch && (
                                 <ListItem key={item.label}>
                                     {item.icon && (
                                         <ListItemIcon>
@@ -117,10 +131,37 @@ const Settings = () => {
                                         checked={item.value === 'true'}
                                     />
                                 </ListItem>
-                            )
-                    )}
+                            )}
+                            {item.type === SettingType.Select && (
+                                <ListItem key={item.label}>
+                                    {item.icon && (
+                                        <ListItemIcon>
+                                            <item.icon />
+                                        </ListItemIcon>
+                                    )}
+                                    <ListItemText primary={item.label} />
+                                    <SelectUI
+                                        value={language}
+                                        sx={{ width: 200 }}
+                                        onChange={(e) =>
+                                            item.onChange(e.target.value)
+                                        }
+                                    >
+                                        {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+                                        {Object.entries(item.options!).map(
+                                            ([key, val]) => (
+                                                <MenuItem key={key} value={key}>
+                                                    {val}
+                                                </MenuItem>
+                                            )
+                                        )}
+                                    </SelectUI>
+                                </ListItem>
+                            )}
+                        </>
+                    ))}
             </List>
-        </>
+        </Box>
     );
 };
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { RadialGauge, RadialGaugeSeries } from 'reaviz';
 import {
     Box,
@@ -19,8 +20,9 @@ import { CustomRadialGaugeValueLabel } from './RadialGaugeValueLabel';
  */
 const Metrics = () => {
     const dispatch = useAppDispatch();
-    const theme = useTheme();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const theme = useTheme();
 
     const { currentConnection } = useAppSelector((state) => state.connection);
     const metrics = useAppSelector((state) => state.metrics[currentConnection]);
@@ -97,7 +99,7 @@ const Metrics = () => {
         <Card variant="outlined" sx={{ margin: 1 }}>
             <CardContent>
                 <Typography variant="h5" component="div" marginBottom={2}>
-                    Metrics
+                    {t('views.connection.overview.metrics.title')}
                 </Typography>
                 <Box
                     sx={{
@@ -143,7 +145,7 @@ const Metrics = () => {
                         navigate(`/connection/${currentConnection}/metrics`);
                     }}
                 >
-                    See Details
+                    {t('views.connection.overview.metrics.details')}
                 </Button>
             </CardActions>
         </Card>

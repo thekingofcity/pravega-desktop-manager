@@ -1,0 +1,176 @@
+{
+    "sidebar": {
+        "connection": "接続",
+        "deployment": "展開",
+        "explore": "探索する",
+        "settings": "設定",
+        "dialogs": {
+            "create": {
+                "title": "新しい接続を追加",
+                "name": "名前",
+                "protocol": "プロトコル",
+                "url": "Url",
+                "port": "ポート",
+                "cancel": "キャンセル",
+                "confirm": "追加"
+            },
+            "edit": {
+                "title": "この接続を編集",
+                "name": "名前",
+                "protocol": "プロトコル",
+                "url": "Url",
+                "port": "ポート",
+                "cancel": "キャンセル",
+                "confirm": "保存"
+            },
+            "delete": {
+                "title": "この接続を削除しますか？",
+                "content": "これは元に戻せません。",
+                "cancel": "キャンセル",
+                "confirm": "削除"
+            }
+        }
+    },
+    "home": "左側のサイドバーでPravega接続を追加または選択できます。",
+    "notfound": "ここには何もありません。現在のルート：",
+    "views": {
+        "connection": {
+            "tabs": {
+                "overview": "概要",
+                "metrics": "指標"
+            },
+            "overview": {
+                "metrics": {
+                    "title": "指標",
+                    "details": "詳細を見る"
+                },
+                "scopesAndStreamsNavigator": {
+                    "title": "ScopesとStreams"
+                },
+                "dialogs": {
+                    "createScope": {
+                        "title": "新しいScopeを作成",
+                        "scopeName": "Scopeの名前",
+                        "cancel": "キャンセル",
+                        "confirm": "追加"
+                    },
+                    "createStream": {
+                        "title": "新しいStreamを作成",
+                        "streamName": "Nameの名前",
+                        "retention": {
+                            "name": "保持ポリシー",
+                            "none": "なし",
+                            "size": "サイズ別",
+                            "time": "時間別",
+                            "sizeValue": "バイト単位のサイズ",
+                            "timeValue": "時間（ミリ秒）"
+                        },
+                        "scaling": {
+                            "name": "スケーリングポリシー",
+                            "fixed": "安定",
+                            "data": "データレートによる自動スケーリング",
+                            "event": "イベントレートによる自動スケーリング",
+                            "initialSegments": "初期セグメント",
+                            "dataValue": "ターゲットキロバイト/秒",
+                            "eventValue": "1秒あたりのターゲットイベント",
+                            "scaleFactor": "スケールファクター"
+                        },
+                        "cancel": "キャンセル",
+                        "confirm": "追加"
+                    },
+                    "delete": {
+                        "titleScope": "削除{{ scope }}？",
+                        "titleStream": "シールして削除{{ scope }}/{{ stream }}？",
+                        "content1": "このスコープ内のすべてのストリームを最初に削除する必要があります。",
+                        "content2": "これは元に戻せません。",
+                        "cancel": "キャンセル",
+                        "confirm": "削除"
+                    }
+                }
+            },
+            "metrics": {
+                "title": "過去1分間の指標",
+                "content1": "現在利用可能な指標はありません。",
+                "content2": "メトリックを公開するには、<code>singlenode.metrics.enable</code>と<code>singlenode.metrics.prometheus.enable</code>を<code>true</code>に設定します<code>standalone-config.properties</code>。"
+            },
+            "preview": {
+                "title": "プレビュー",
+                "decoders": {
+                    "utf8": "シンプルなUtf8デコーダー"
+                },
+                "writer": "ライター",
+                "placeholder": "Streamに何かを書いてください！",
+                "dialogs": {
+                    "advancedReadOptions": {
+                        "title": "高度な読み取りオプション",
+                        "readFrom": "どこから読みたいですか？",
+                        "position": "位置",
+                        "head": "頭",
+                        "tail": "テール",
+                        "streamCut": "Stream Cut",
+                        "streamCutValue": "指定されたスStream Cut",
+                        "readAutomatically": "自動的に読み取りを開始しますか？",
+                        "confirm": "設定"
+                    }
+                }
+            }
+        },
+        "deployment": {
+            "title": "Pravegaは次の環境で利用できます",
+            "local": "ローカル",
+            "remote": "リモート",
+            "standalone": {
+                "title": "スタンドアロン",
+                "content1": "スタンドアロンは、Pravegaで遊ぶための完全なコントロールを提供します。",
+                "content2": "ただし、データはメモリに保存されているため、再起動後にデータが失われます。",
+                "step1": "1. Java 11+",
+                "step2": "2. Pravega installed",
+                "step3": "3. Pravega実行中",
+                "status1": "検出済み",
+                "status2": "Install 済み",
+                "status3": "実行中",
+                "action1": "Install",
+                "action2": "Install",
+                "action3": "実行"
+            },
+            "dockerCompose": {
+                "title": "Docker Compose",
+                "content1": "これは、Pravegaを起動する最も簡単な方法であり、関連するすべてのサービスと構成を管理します。",
+                "content2": "データはコンテナに保存されます。",
+                "step1": "1. Docker",
+                "step2": "2. Pravega実行中",
+                "status1": "検出済み",
+                "status2": "実行中",
+                "action1": "インスInstallトール",
+                "action2": "実行"
+            },
+            "cluster": {
+                "title": "Pravegaクラスター",
+                "content1": "私たちの専門家が、Pravegaクラスターの実行に必要なすべての面倒をみます。",
+                "content2": "リソースについて心配する必要はありません。クラウド上で無制限です！",
+                "content3": "必要なのは、いくつかのストリームに名前を付けて接続することです。",
+                "action": "手順を参照"
+            }
+        },
+        "explore": {
+            "cdc": {
+                "title": "データキャプチャの変更",
+                "content1": "変更ログはデータベースから取得され、Pravegaに取り込まれます。",
+                "content2": "変更ログをストリーミングイベントとして処理し、保持します。",
+                "content3": "変更ログを分析し、Flinkを使用してマテリアライズドビューを再構築します。",
+                "action": "手順を参照"
+            }
+        },
+        "settings": {
+            "title": "設定",
+            "advancedReadOptions": "詳細オプションを使用してストリームを読み取る",
+            "languages": {
+                "name": "言語",
+                "en-US": "英語",
+                "zh-CN": "簡略化された中国語",
+                "ja-JP": "日本語",
+                "ko-KR": "韓国語"
+            }
+        }
+    }
+}

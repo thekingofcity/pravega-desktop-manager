@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Button,
@@ -16,6 +17,7 @@ import flinkLogo from '../../../assets/flink-header-logo.svg';
 import kibanaLogo from '../../../assets/logo-kibana-32-color.svg';
 
 const Explore = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     return (
@@ -33,7 +35,7 @@ const Explore = () => {
                 variant="outlined"
                 sx={{ margin: 1, width: 'calc(100% - 226)', height: 300 }}
             >
-                <CardHeader title="Change Data Capture" />
+                <CardHeader title={t('views.explore.cdc.title')} />
                 <CardContent>
                     <Box
                         sx={{
@@ -63,8 +65,7 @@ const Explore = () => {
                                 align="center"
                                 gutterBottom
                             >
-                                Change logs are pulled from database and ingest
-                                to Pravega.
+                                {t('views.explore.cdc.content1')}
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
@@ -90,8 +91,7 @@ const Explore = () => {
                                 align="center"
                                 gutterBottom
                             >
-                                Process the change logs as streaming events and
-                                persist.
+                                {t('views.explore.cdc.content2')}
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
@@ -118,8 +118,7 @@ const Explore = () => {
                                 align="center"
                                 gutterBottom
                             >
-                                Analyze the change logs and rebuild the
-                                materialized view with Flink.
+                                {t('views.explore.cdc.content3')}
                             </Typography>
                         </Box>
                         <Divider orientation="vertical" flexItem />
@@ -138,12 +137,12 @@ const Explore = () => {
                                     variant="contained"
                                     onClick={() =>
                                         window.open(
-                                            'https://github.com/pravega/pravega-samples/pull/312',
+                                            'https://github.com/pravega/pravega-samples/tree/master/scenarios/change-data-capture',
                                             '_blank'
                                         )
                                     }
                                 >
-                                    See Instructions
+                                    {t('views.explore.cdc.action')}
                                 </Button>
                             </CardActions>
                         </Box>

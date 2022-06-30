@@ -1,0 +1,176 @@
+{
+    "sidebar": {
+        "connection": "연결",
+        "deployment": "배포",
+        "explore": "탐색",
+        "settings": "설정",
+        "dialogs": {
+            "create": {
+                "title": "새 연결 추가",
+                "name": "이름",
+                "protocol": "프로토콜",
+                "url": "주소",
+                "port": "포트",
+                "cancel": "취소",
+                "confirm": "추가"
+            },
+            "edit": {
+                "title": "이 연결 편집",
+                "name": "이름",
+                "protocol": "프로토콜",
+                "url": "주소",
+                "port": "포트",
+                "cancel": "취소",
+                "confirm": "저장"
+            },
+            "delete": {
+                "title": "이 연결을 삭제하시겠습니까?",
+                "content": "이 작업은 취소할 수 없습니다.",
+                "cancel": "취소",
+                "confirm": "삭제"
+            }
+        }
+    },
+    "home": "왼쪽 사이드바에서 Pravega 연결을 추가하거나 선택할 수 있습니다.",
+    "notfound": "여기에 아무것도 없습니다. 현재 경로:",
+    "views": {
+        "connection": {
+            "tabs": {
+                "overview": "개요",
+                "metrics": "메트릭"
+            },
+            "overview": {
+                "metrics": {
+                    "title": "측정항목",
+                    "details": "자세히 보기"
+                },
+                "scopesAndStreamsNavigator": {
+                    "title": "범위 및 스트림"
+                },
+                "dialogs": {
+                    "createScope": {
+                        "title": "새 범위 만들기",
+                        "scopeName": "범위 이름",
+                        "cancel": "취소",
+                        "confirm": "추가"
+                    },
+                    "createStream": {
+                        "title": "새 스트림 만들기",
+                        "streamName": "스트림 이름",
+                        "retention": {
+                            "name": "보존 정책",
+                            "none": "없음",
+                            "size": "크기별",
+                            "time": "시간별",
+                            "sizeValue": "바이트 단위 크기",
+                            "timeValue": "밀리초 단위의 시간"
+                        },
+                        "scaling": {
+                            "name": "확장 정책",
+                            "fixed": "고정",
+                            "data": "데이터 속도로 자동 크기 조정",
+                            "event": "이벤트 비율에 따라 자동 크기 조정",
+                            "initialSegments": "초기 세그먼트",
+                            "dataValue": "초당 목표 킬로바이트",
+                            "eventValue": "초당 대상 이벤트",
+                            "scaleFactor": "스케일 팩터"
+                        },
+                        "cancel": "취소",
+                        "confirm": "추가"
+                    },
+                    "delete": {
+                        "titleScope": "{{ scope }}를 삭제하시겠습니까?",
+                        "titleStream": "{{ scope }}/{{ stream }}봉인 및 삭제?",
+                        "content1": "이 범위의 모든 스트림을 먼저 삭제해야 합니다.",
+                        "content2": "이 작업은 취소할 수 없습니다.",
+                        "cancel": "취소",
+                        "confirm": "삭제"
+                    }
+                }
+            },
+            "metrics": {
+                "title": "지난 1분 동안의 측정항목",
+                "content1": "현재 사용할 수 있는 측정항목이 없습니다.",
+                "content2": "메트릭을 노출하려면 <code>singlenode.metrics.enable</code> 및 <code>singlenode.metrics.prometheus.enable</code>을 <code>true</code>로 설정하십시오 <code>standalone-config.properties</code>."
+            },
+            "preview": {
+                "title": "미리보기",
+                "decoders": {
+                    "utf8": "단순한 Utf8 디코더"
+                },
+                "writer": "작가",
+                "placeholder": "스트림에 무언가를 쓰세요!",
+                "dialogs": {
+                    "advancedReadOptions": {
+                        "title": "고급 읽기 옵션",
+                        "readFrom": "어디에서 읽으시겠습니까?",
+                        "position": "위치",
+                        "head": "머리",
+                        "tail": "꼬리",
+                        "streamCut": "스트림 컷",
+                        "streamCutValue": "지정된 스트림 잘라내기",
+                        "readAutomatically": "자동으로 읽기를 시작하시겠습니까?",
+                        "confirm": "설정"
+                    }
+                }
+            }
+        },
+        "deployment": {
+            "title": "Pravega는 다음 환경에서 사용할 수 있습니다",
+            "local": "로컬",
+            "remote": "원격",
+            "standalone": {
+                "title": "독립 실행형",
+                "content1": "독립 실행형은 Pravega와 함께 플레이할 수 있는 전체 제어 기능을 제공합니다.",
+                "content2": "하지만 데이터는 메모리에 저장되어 있으므로 다시 시작하면 손실됩니다.",
+                "step1": "1. Java 11+",
+                "step2": "2. Pravega설치됨",
+                "step3": "3. Pravega실행",
+                "status1": "감지됨",
+                "status2": "설치됨",
+                "status3": "실행 중",
+                "action1": "설치",
+                "action2": "설치",
+                "action3": "실행"
+            },
+            "dockerCompose": {
+                "title": "Docker Compose",
+                "content1": "Pravega를 시작하고 모든 관련 서비스 및 구성을 관리하는 가장 간단한 방법입니다.",
+                "content2": "데이터는 컨테이너에 보존됩니다.",
+                "step1": "1. Docker실행",
+                "step2": "2. Pravega실행",
+                "status1": "감지됨",
+                "status2": "실행 중",
+                "action1": "설치",
+                "action2": "실행"
+            },
+            "cluster": {
+                "title": "프라베가 클러스터",
+                "content1": "우리 전문가가 Pravega 클러스터를 실행하는 데 필요한 모든 것을 처리할 것입니다.",
+                "content2": "리소스에 대해 걱정할 필요가 없습니다. 클라우드에서 무제한입니다!",
+                "content3": "필요한 것은 몇 개의 스트림에 이름을 지정하고 연결하는 것입니다.",
+                "action": "지침 보기"
+            }
+        },
+        "explore": {
+            "cdc": {
+                "title": "변경 데이터 캡처",
+                "content1": "변경 로그를 데이터베이스에서 가져와서 Pravega로 수집합니다.",
+                "content2": "변경 로그를 스트리밍 이벤트로 처리하고 유지합니다.",
+                "content3": "변경 로그를 분석하고 Flink로 구체화된 뷰를 다시 작성하십시오.",
+                "action": "지침 보기"
+            }
+        },
+        "settings": {
+            "title": "설정",
+            "advancedReadOptions": "고급 옵션으로 스트림 읽기",
+            "languages": {
+                "name": "언어",
+                "en-US": "영어",
+                "zh-CN": "중국어 간체",
+                "ja-JP": "일본어",
+                "ko-KR": "한국어"
+            }
+        }
+    }
+}

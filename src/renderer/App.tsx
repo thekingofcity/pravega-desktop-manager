@@ -6,19 +6,20 @@ import {
     useLocation,
     Outlet,
 } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Box, IconButton, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import MaximizeIcon from '@mui/icons-material/Maximize';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import SideBar from './sidebar/sidebar';
-import ConnectionTabs from './view/connection/connection-tabs';
-import Connection from './view/connection/overview';
-import DetailedMetrics from './view/connection/detailed-metrics/detailed-metrics';
-import PreviewStream from './view/connection/preview/preview-stream';
-import Deployment from './view/deployment';
-import Explore from './view/explore';
-import Settings from './view/settings';
+import ConnectionTabs from './views/connection/connection-tabs';
+import Connection from './views/connection/overview';
+import DetailedMetrics from './views/connection/detailed-metrics';
+import PreviewStream from './views/connection/preview/preview-stream';
+import Deployment from './views/deployment';
+import Explore from './views/explore';
+import Settings from './views/settings';
 import './scrollbar.css';
 import './status.css';
 
@@ -34,39 +35,49 @@ const theme = createTheme({
     },
 });
 
-const Home = () => (
-    <>
-        <Box
-            sx={{
-                top: 0,
-                width: '100%',
-                height: 40,
-                background: theme.palette.background.default,
-                WebkitAppRegion: 'drag',
-            }}
-        />
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <Typography variant="h5" align="center" sx={{ marginBottom: 6 }}>
-                You may add or choose a Pravega connection in the left sidebar
-            </Typography>
-        </Box>
-    </>
-);
+const Home = () => {
+    const { t } = useTranslation();
+    return (
+        <>
+            <Box
+                sx={{
+                    top: 0,
+                    width: '100%',
+                    height: 40,
+                    background: theme.palette.background.default,
+                    WebkitAppRegion: 'drag',
+                }}
+            />
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    height: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Typography
+                    variant="h5"
+                    align="center"
+                    sx={{ marginBottom: 6 }}
+                >
+                    {t('home')}
+                </Typography>
+            </Box>
+        </>
+    );
+};
 
 const NotFound = () => {
     const location = useLocation();
+    const { t } = useTranslation();
     return (
         <>
-            <p>Nothing here. Current route: {location.pathname}</p>
+            <p>
+                {t('notfound')} {location.pathname}
+            </p>
         </>
     );
 };

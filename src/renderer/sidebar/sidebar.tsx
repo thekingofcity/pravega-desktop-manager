@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
+import { useTranslation } from 'react-i18next';
 import {
     Collapse,
     Divider,
@@ -34,6 +35,7 @@ import pravegaLogo from '../../../assets/Pravega_logo_white-1.png';
 
 const SideBar = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     // local ui state
     const size: Size = useWindowSize();
@@ -82,14 +84,14 @@ const SideBar = () => {
                     position: 'fixed',
                     margin: 0,
                     color: 'white',
-                    maxWidth: 230,
+                    width: 230,
                 }}
             >
                 <ListItemButton onClick={handleExpandConnection}>
                     <ListItemIcon sx={{ minWidth: 50, color: 'white' }}>
                         <StorageIcon fontSize="large" />
                     </ListItemIcon>
-                    <ListItemText primary="Connection" />
+                    <ListItemText primary={t('sidebar.connection')} />
                     <IconButton
                         onClick={(e) => {
                             setIsAddConnOpen(true);
@@ -153,7 +155,7 @@ const SideBar = () => {
                 <Divider sx={{ background: 'white' }} />
                 <ListItemLink
                     to="/deployment"
-                    primary="Deployment"
+                    primary={t('sidebar.deployment')}
                     icon={
                         <DownloadIcon
                             fontSize="large"
@@ -163,14 +165,14 @@ const SideBar = () => {
                 />
                 <ListItemLink
                     to="/explore"
-                    primary="Explore"
+                    primary={t('sidebar.explore')}
                     icon={
                         <ExploreIcon fontSize="large" sx={{ color: 'white' }} />
                     }
                 />
                 <ListItemLink
                     to="/settings"
-                    primary="Settings"
+                    primary={t('sidebar.settings')}
                     icon={
                         <SettingsIcon
                             fontSize="large"

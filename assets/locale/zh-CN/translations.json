@@ -1,0 +1,176 @@
+{
+    "sidebar": {
+        "connection": "链接",
+        "deployment": "部署",
+        "explore": "探索",
+        "settings": "设置",
+        "dialogs": {
+            "create": {
+                "title": "添加一个新链接",
+                "name": "名称",
+                "protocol": "协议",
+                "url": "地址",
+                "port": "端口",
+                "cancel": "取消",
+                "confirm": "添加"
+            },
+            "edit": {
+                "title": "编辑这个链接",
+                "name": "名称",
+                "protocol": "协议",
+                "url": "地址",
+                "port": "端口",
+                "cancel": "取消",
+                "confirm": "保存"
+            },
+            "delete": {
+                "title": "删除这个链接？",
+                "content": "此操作无法撤销。",
+                "cancel": "取消",
+                "confirm": "删除"
+            }
+        }
+    },
+    "home": "您可以在左侧的侧边栏中添加一个Pravega链接。",
+    "notfound": "这里什么都没有。当前路径是：",
+    "views": {
+        "connection": {
+            "tabs": {
+                "overview": "总览",
+                "metrics": "性能指标"
+            },
+            "overview": {
+                "metrics": {
+                    "title": "性能指标",
+                    "details": "查看详情"
+                },
+                "scopesAndStreamsNavigator": {
+                    "title": "Scopes和Streams"
+                },
+                "dialogs": {
+                    "createScope": {
+                        "title": "添加一个新Scope",
+                        "scopeName": "Scope名称",
+                        "cancel": "取消",
+                        "confirm": "添加"
+                    },
+                    "createStream": {
+                        "title": "添加一个新Stream",
+                        "streamName": "Stream名称",
+                        "retention": {
+                            "name": "保留策略",
+                            "none": "无",
+                            "size": "以数据大小",
+                            "time": "以时间",
+                            "sizeValue": "大小（字节）",
+                            "timeValue": "时间（毫秒）"
+                        },
+                        "scaling": {
+                            "name": "扩缩容策略",
+                            "fixed": "固定",
+                            "data": "根据数据速率",
+                            "event": "根据事件速率",
+                            "initialSegments": "初始段数",
+                            "dataValue": "数据速率（千字节每秒）",
+                            "eventValue": "事件速率（事件数每秒）",
+                            "scaleFactor": "扩缩容因子"
+                        },
+                        "cancel": "取消",
+                        "confirm": "添加"
+                    },
+                    "delete": {
+                        "titleScope": "删除 {{ scope }}？",
+                        "titleStream": "封印并删除 {{ scope }}/{{ stream }}？",
+                        "content1": "在此scope中所有streams都必须要先被删除。",
+                        "content2": "此操作无法撤销。",
+                        "cancel": "取消",
+                        "confirm": "删除"
+                    }
+                }
+            },
+            "metrics": {
+                "title": "过去一分钟的性能指标",
+                "content1": "现在没有可以展示的性能指标。",
+                "content2": "为了展现性能指标，在单机模式中您可以在<code>standalone-config.properties</code>中设置<code>singlenode.metrics.enable</code>和<code>singlenode.metrics.prometheus.enable</code>为<code>true</code>或在<code>config.properties</code>中设置<code>metrics.statistics.enable</code>和<code>metrics.prometheus.enable</code>为<code>true</code>如果您在其他环境中。"
+            },
+            "preview": {
+                "title": "预览",
+                "decoders": {
+                    "utf8": "基本的UTF8解码器"
+                },
+                "writer": "写入区",
+                "placeholder": "您可以写任意东西到stream中！",
+                "dialogs": {
+                    "advancedReadOptions": {
+                        "title": "高级读取选项",
+                        "readFrom": "从哪里开始读取？",
+                        "position": "位置",
+                        "head": "头",
+                        "tail": "尾",
+                        "streamCut": "Stream Cut",
+                        "streamCutValue": "自定义的Stream Cut值",
+                        "readAutomatically": "自动开始读取？",
+                        "confirm": "好的"
+                    }
+                }
+            }
+        },
+        "deployment": {
+            "title": "您可以在以下环境中部署Pravega",
+            "local": "本地",
+            "remote": "远程",
+            "standalone": {
+                "title": "单机模式",
+                "content1": "单机模式可以使您完全操控Pravega。",
+                "content2": "但是所有数据在重启后会消失，因为是他们被保存在内存中",
+                "step1": "1. Java 11+",
+                "step2": "2. 安装Pravega",
+                "step3": "3. 运行Pravega",
+                "status1": "已检测",
+                "status2": "已安装",
+                "status3": "正在运行",
+                "action1": "安装",
+                "action2": "安装",
+                "action3": "运行"
+            },
+            "dockerCompose": {
+                "title": "Docker Compose模式",
+                "content1": "Docker compose会一键配置所有需要依赖和环境，是体验Pravega的最简单方式。",
+                "content2": "数据会保存在容器之中",
+                "step1": "1. 运行Docker",
+                "step2": "2. 运行Pravega",
+                "status1": "已检测",
+                "status2": "正在运行",
+                "action1": "安装",
+                "action2": "运行"
+            },
+            "cluster": {
+                "title": "集群模式",
+                "content1": "Pravega集群会被交由专业人士管理，包括了一切的资源和维护。",
+                "content2": "无需担心任何事情，它就在云中，随时可用！",
+                "content3": "你只需要创建stream并使用它们。",
+                "action": "查看详情"
+            }
+        },
+        "explore": {
+            "cdc": {
+                "title": "数据库增量数据采集",
+                "content1": "从数据库中采集变化日志并注入Pravega中。",
+                "content2": "以流的方式处理并保存数据。",
+                "content3": "通过Flink分析并重建所需的处理后数据。",
+                "action": "查看详情"
+            }
+        },
+        "settings": {
+            "title": "设置",
+            "advancedReadOptions": "使用高级选项读取Stream",
+            "languages": {
+                "name": "语言",
+                "en-US": "英语",
+                "zh-CN": "简体中文",
+                "ja-JP": "日语",
+                "ko-KR": "韩语"
+            }
+        }
+    }
+}

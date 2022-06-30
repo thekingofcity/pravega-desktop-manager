@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+// import i18n (needs to be bundled :))
+import './i18n/i18n';
 import App from './App';
 import store from './redux/store';
 

@@ -4,7 +4,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface ConnectionState {
     currentConnection: string;
     connections: { [id: string]: Connection };
-    advancedRead: boolean;
 }
 
 export interface Connection {
@@ -18,10 +17,9 @@ export interface Connection {
 const initialState: ConnectionState = {
     currentConnection: 'pravega1',
     connections: {},
-    advancedRead: true,
     ...JSON.parse(
         // @ts-ignore
-        localStorage.getItem('reduxState')
+        localStorage.getItem('reduxConnectionState')
     ),
 };
 
@@ -101,9 +99,6 @@ export const connectionSlice = createSlice({
                     action.payload;
             }
         },
-        setAdvancedRead: (state, action: PayloadAction<boolean>) => {
-            state.advancedRead = action.payload;
-        },
         resetAll: (state) => {
             Object.values(state.connections).forEach((connection) => {
                 connection.currentTab = 'overview';
@@ -122,7 +117,6 @@ export const {
     addStream,
     delStream,
     setCurrentStream,
-    setAdvancedRead,
     resetAll,
 } = connectionSlice.actions;
 

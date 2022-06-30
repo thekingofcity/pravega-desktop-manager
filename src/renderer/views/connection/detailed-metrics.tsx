@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { Line, LineChart, LineSeries } from 'reaviz';
 import { Box, Typography } from '@mui/material';
 import { useWindowSize } from 'renderer/utils';
-import { useAppSelector } from '../../../redux/store';
+import { useAppSelector } from '../../redux/store';
 
 const DetailedMetrics = () => {
     const { currentConnection } = useAppSelector((state) => state.connection);
     const metrics = useAppSelector((state) => state.metrics[currentConnection]);
+    const { t } = useTranslation();
     const size = useWindowSize();
 
     // color and name for metrics
@@ -71,7 +73,7 @@ const DetailedMetrics = () => {
     return (
         <Box sx={{ padding: 2, paddingLeft: 6 }}>
             <Typography variant="h5" component="div" marginBottom={2}>
-                Metrics over last one minute
+                {t('views.connection.metrics.title')}
             </Typography>
             {metricsData.length ? (
                 <>
@@ -165,13 +167,13 @@ const DetailedMetrics = () => {
             ) : (
                 <>
                     <Typography variant="body1">
-                        There is no metrics available right now.
+                        {t('views.connection.metrics.content1')}
                     </Typography>
                     <Typography variant="body1">
-                        To expose metrics, set{' '}
-                        <code>singlenode.metrics.enable</code> and{' '}
-                        <code>singlenode.metrics.prometheus.enable</code> to{' '}
-                        <code>true</code> in the <code>config.properties</code>.
+                        <Trans
+                            defaults={t('views.connection.metrics.content2')}
+                            components={{ code: <code /> }}
+                        />
                     </Typography>
                 </>
             )}

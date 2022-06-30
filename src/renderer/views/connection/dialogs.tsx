@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Button,
@@ -20,6 +21,7 @@ interface AddScopeDialogProps {
 
 export const AddScopeDialog = (props: AddScopeDialogProps) => {
     const { open, onClose, onAdd } = props;
+    const { t } = useTranslation();
 
     const [scopeName, setScopeName] = React.useState('');
 
@@ -33,12 +35,16 @@ export const AddScopeDialog = (props: AddScopeDialogProps) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Create a new Scope</DialogTitle>
+            <DialogTitle>
+                {t('views.connection.overview.dialogs.createScope.title')}
+            </DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Scope Name"
+                    label={t(
+                        'views.connection.overview.dialogs.createScope.scopeName'
+                    )}
                     value={scopeName}
                     onChange={({ target: { value } }) => setScopeName(value)}
                     variant="outlined"
@@ -47,7 +53,7 @@ export const AddScopeDialog = (props: AddScopeDialogProps) => {
             </DialogContent>
             <DialogActions sx={{ padding: 3 }}>
                 <Button onClick={onClose} variant="contained">
-                    Cancel
+                    {t('views.connection.overview.dialogs.createScope.cancel')}
                 </Button>
                 <Button
                     onClick={async () => {
@@ -56,7 +62,7 @@ export const AddScopeDialog = (props: AddScopeDialogProps) => {
                     variant="contained"
                     color="error"
                 >
-                    Add
+                    {t('views.connection.overview.dialogs.createScope.confirm')}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -71,6 +77,7 @@ interface AddStreamDialogProps {
 
 export const AddStreamDialog = (props: AddStreamDialogProps) => {
     const { open, onClose, onAdd } = props;
+    const { t } = useTranslation();
 
     const [streamName, setStreamName] = React.useState('');
     const [retentionPolicy, setRetentionPolicy] = React.useState(
@@ -118,7 +125,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Stream Name"
+                    label={t(
+                        'views.connection.overview.dialogs.createStream.streamName'
+                    )}
                     value={streamName}
                     onChange={({ target: { value } }) => setStreamName(value)}
                     variant="outlined"
@@ -133,7 +142,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                 >
                     <TextField
                         value={retentionPolicy}
-                        label="Retention Policy"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.retention.name'
+                        )}
                         onChange={(e) =>
                             setRetentionPolicy(
                                 e.target.value as 'none' | 'by_size' | 'by_time'
@@ -142,12 +153,26 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         select // tell TextField to render select
                         sx={{ width: 150 }} // display the full text
                     >
-                        <MenuItem value="none">None</MenuItem>
-                        <MenuItem value="by_size">By Size</MenuItem>
-                        <MenuItem value="by_time">By Time</MenuItem>
+                        <MenuItem value="none">
+                            {t(
+                                'views.connection.overview.dialogs.createStream.retention.none'
+                            )}
+                        </MenuItem>
+                        <MenuItem value="by_size">
+                            {t(
+                                'views.connection.overview.dialogs.createStream.retention.size'
+                            )}
+                        </MenuItem>
+                        <MenuItem value="by_time">
+                            {t(
+                                'views.connection.overview.dialogs.createStream.retention.time'
+                            )}
+                        </MenuItem>
                     </TextField>
                     <TextField
-                        label="Size in bytes"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.retention.sizeValue'
+                        )}
                         value={retentionValue}
                         onChange={({ target: { value } }) =>
                             setRetentionValue(Number(value.replace(/\D/g, '')))
@@ -155,7 +180,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         sx={retentionPolicy !== 'by_size' ? hidden : {}}
                     />
                     <TextField
-                        label="Time in milliseconds"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.retention.timeValue'
+                        )}
                         value={retentionValue}
                         onChange={({ target: { value } }) =>
                             setRetentionValue(Number(value.replace(/\D/g, '')))
@@ -172,7 +199,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                 >
                     <TextField
                         value={scalingPolicy}
-                        label="Scaling Policy"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.scaling.name'
+                        )}
                         onChange={(e) =>
                             setScalingPolicy(
                                 e.target.value as
@@ -184,23 +213,35 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         select // tell TextField to render select
                         sx={{ width: 150 }} // display the full text
                     >
-                        <MenuItem value="fixed">Fixed</MenuItem>
+                        <MenuItem value="fixed">
+                            {t(
+                                'views.connection.overview.dialogs.createStream.scaling.fixed'
+                            )}
+                        </MenuItem>
                         <MenuItem value="by_data_rate">
-                            Auto scale by data rate
+                            {t(
+                                'views.connection.overview.dialogs.createStream.scaling.data'
+                            )}
                         </MenuItem>
                         <MenuItem value="by_event_rate">
-                            Auto scale by event rate
+                            {t(
+                                'views.connection.overview.dialogs.createStream.scaling.event'
+                            )}
                         </MenuItem>
                     </TextField>
                     <TextField
-                        label="Initial Segments"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.scaling.initialSegments'
+                        )}
                         value={initialSegments}
                         onChange={({ target: { value } }) =>
                             setInitialSegments(Number(value.replace(/\D/g, '')))
                         }
                     />
                     <TextField
-                        label="Target kbytes per second"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.scaling.dataValue'
+                        )}
                         value={scalingValue}
                         onChange={({ target: { value } }) =>
                             setScalingValue(Number(value.replace(/\D/g, '')))
@@ -208,7 +249,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         sx={scalingPolicy !== 'by_data_rate' ? hidden : {}}
                     />
                     <TextField
-                        label="Target events per second"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.scaling.eventValue'
+                        )}
                         value={scalingValue}
                         onChange={({ target: { value } }) =>
                             setScalingValue(Number(value.replace(/\D/g, '')))
@@ -216,7 +259,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                         sx={scalingPolicy !== 'by_event_rate' ? hidden : {}}
                     />
                     <TextField
-                        label="Scale factor"
+                        label={t(
+                            'views.connection.overview.dialogs.createStream.scaling.scaleFactor'
+                        )}
                         value={scaleFactor}
                         onChange={({ target: { value } }) =>
                             setScaleFactor(Number(value.replace(/\D/g, '')))
@@ -227,7 +272,7 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
             </DialogContent>
             <DialogActions sx={{ padding: 3 }}>
                 <Button onClick={onClose} variant="contained">
-                    Cancel
+                    {t('views.connection.overview.dialogs.createStream.cancel')}
                 </Button>
                 <Button
                     onClick={async () => {
@@ -236,7 +281,9 @@ export const AddStreamDialog = (props: AddStreamDialogProps) => {
                     variant="contained"
                     color="error"
                 >
-                    Add
+                    {t(
+                        'views.connection.overview.dialogs.createStream.confirm'
+                    )}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -253,6 +300,7 @@ interface RemoveScopeOrStreamDiag {
 
 export const RemoveScopeOrStreamDialog = (props: RemoveScopeOrStreamDiag) => {
     const { open, type, scope, stream, onClose } = props;
+    const { t } = useTranslation();
 
     return (
         <Dialog
@@ -263,16 +311,23 @@ export const RemoveScopeOrStreamDialog = (props: RemoveScopeOrStreamDiag) => {
         >
             <DialogTitle>
                 {type === 'Scope'
-                    ? `Delete ${scope} ?`
-                    : `Seal and delete ${scope}/${stream} ?`}
+                    ? t('views.connection.overview.dialogs.delete.titleScope', {
+                          scope,
+                      })
+                    : t(
+                          'views.connection.overview.dialogs.delete.titleStream',
+                          { scope, stream }
+                      )}
             </DialogTitle>
             <DialogContent>
                 {type === 'Scope' && (
                     <DialogContentText>
-                        All streams in this scope need to be delete first.
+                        {t('views.connection.overview.dialogs.delete.content1')}
                     </DialogContentText>
                 )}
-                <DialogContentText>This can not be undone.</DialogContentText>
+                <DialogContentText>
+                    {t('views.connection.overview.dialogs.delete.content2')}
+                </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button
@@ -282,7 +337,7 @@ export const RemoveScopeOrStreamDialog = (props: RemoveScopeOrStreamDiag) => {
                     variant="contained"
                     autoFocus
                 >
-                    Cancel
+                    {t('views.connection.overview.dialogs.delete.cancel')}
                 </Button>
                 <Button
                     onClick={async () => {
@@ -291,7 +346,7 @@ export const RemoveScopeOrStreamDialog = (props: RemoveScopeOrStreamDiag) => {
                     variant="contained"
                     color="error"
                 >
-                    Delete
+                    {t('views.connection.overview.dialogs.delete.confirm')}
                 </Button>
             </DialogActions>
         </Dialog>

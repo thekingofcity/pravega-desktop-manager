@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Button,
@@ -17,6 +18,7 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import CloudIcon from '@mui/icons-material/Cloud';
 
 const Deployment = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     return (
@@ -46,7 +48,7 @@ const Deployment = () => {
                         align="center"
                         sx={{ marginBottom: 6 }}
                     >
-                        Pravega is available in the following environments
+                        {t('views.deployment.title')}
                     </Typography>
                     <Box
                         sx={{
@@ -72,7 +74,7 @@ const Deployment = () => {
                                     variant="h5"
                                     sx={{ marginBottom: 3 }}
                                 >
-                                    Local
+                                    {t('views.deployment.local')}
                                 </Typography>
                             </Box>
                             <Box
@@ -85,22 +87,27 @@ const Deployment = () => {
                                     variant="outlined"
                                     sx={{ margin: 1, width: 300, height: 350 }}
                                 >
-                                    <CardHeader title="Standalone" />
+                                    <CardHeader
+                                        title={t(
+                                            'views.deployment.standalone.title'
+                                        )}
+                                    />
                                     <CardContent>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            Standalone provides a simple way to
-                                            play with Pravega.
+                                            {t(
+                                                'views.deployment.standalone.content1'
+                                            )}
                                         </Typography>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            But the data will be lost after
-                                            restart since they are stored in the
-                                            memory.
+                                            {t(
+                                                'views.deployment.standalone.content2'
+                                            )}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
@@ -111,14 +118,18 @@ const Deployment = () => {
                                                         variant: 'body2',
                                                     }}
                                                 >
-                                                    1. Java 11+
+                                                    {t(
+                                                        'views.deployment.standalone.step1'
+                                                    )}
                                                 </ListItemText>
                                                 <Button
                                                     size="small"
                                                     variant="contained"
                                                     disabled
                                                 >
-                                                    Detected
+                                                    {t(
+                                                        'views.deployment.standalone.status1'
+                                                    )}
                                                 </Button>
                                             </ListItem>
                                             <ListItem sx={{ padding: 1 }}>
@@ -127,14 +138,18 @@ const Deployment = () => {
                                                         variant: 'body2',
                                                     }}
                                                 >
-                                                    2. Pravega installed
+                                                    {t(
+                                                        'views.deployment.standalone.step2'
+                                                    )}
                                                 </ListItemText>
                                                 <Button
                                                     size="small"
                                                     variant="contained"
                                                     disabled
                                                 >
-                                                    Installed
+                                                    {t(
+                                                        'views.deployment.standalone.status2'
+                                                    )}
                                                 </Button>
                                             </ListItem>
                                             <ListItem sx={{ padding: 1 }}>
@@ -143,14 +158,18 @@ const Deployment = () => {
                                                         variant: 'body2',
                                                     }}
                                                 >
-                                                    3. Pravega running
+                                                    {t(
+                                                        'views.deployment.standalone.step3'
+                                                    )}
                                                 </ListItemText>
                                                 <Button
                                                     size="small"
                                                     variant="contained"
                                                     disabled
                                                 >
-                                                    Running
+                                                    {t(
+                                                        'views.deployment.standalone.status3'
+                                                    )}
                                                 </Button>
                                             </ListItem>
                                         </List>
@@ -160,22 +179,27 @@ const Deployment = () => {
                                     variant="outlined"
                                     sx={{ margin: 1, width: 300, height: 350 }}
                                 >
-                                    <CardHeader title="Docker Compose" />
+                                    <CardHeader
+                                        title={t(
+                                            'views.deployment.dockerCompose.title'
+                                        )}
+                                    />
                                     <CardContent>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            Docker compose will manage all the
-                                            required services like Zookeeper,
-                                            Bookkeeper and HDFS.
+                                            {t(
+                                                'views.deployment.dockerCompose.content1'
+                                            )}
                                         </Typography>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            Data will be preserved in the
-                                            container.
+                                            {t(
+                                                'views.deployment.dockerCompose.content2'
+                                            )}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
@@ -186,14 +210,18 @@ const Deployment = () => {
                                                         variant: 'body2',
                                                     }}
                                                 >
-                                                    1. Docker
+                                                    {t(
+                                                        'views.deployment.dockerCompose.step1'
+                                                    )}
                                                 </ListItemText>
                                                 <Button
                                                     size="small"
                                                     variant="contained"
                                                     disabled
                                                 >
-                                                    Detected
+                                                    {t(
+                                                        'views.deployment.dockerCompose.status1'
+                                                    )}
                                                 </Button>
                                             </ListItem>
                                             <ListItem sx={{ padding: 1 }}>
@@ -202,14 +230,18 @@ const Deployment = () => {
                                                         variant: 'body2',
                                                     }}
                                                 >
-                                                    2. Pravega running
+                                                    {t(
+                                                        'views.deployment.dockerCompose.step2'
+                                                    )}
                                                 </ListItemText>
                                                 <Button
                                                     size="small"
                                                     variant="contained"
                                                     disabled
                                                 >
-                                                    Running
+                                                    {t(
+                                                        'views.deployment.dockerCompose.status2'
+                                                    )}
                                                 </Button>
                                             </ListItem>
                                         </List>
@@ -236,7 +268,7 @@ const Deployment = () => {
                                     variant="h5"
                                     sx={{ marginBottom: 3 }}
                                 >
-                                    Remote
+                                    {t('views.deployment.remote')}
                                 </Typography>
                             </Box>
                             <Box
@@ -249,29 +281,35 @@ const Deployment = () => {
                                     variant="outlined"
                                     sx={{ margin: 1, width: 300, height: 350 }}
                                 >
-                                    <CardHeader title="Pravega Cluster" />
+                                    <CardHeader
+                                        title={t(
+                                            'views.deployment.cluster.title'
+                                        )}
+                                    />
                                     <CardContent>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            Our professional will take care of
-                                            everything needed to run a Pravega
-                                            cluster.
+                                            {t(
+                                                'views.deployment.cluster.content1'
+                                            )}
                                         </Typography>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            No worries about resources, they are
-                                            unlimited on the cloud!
+                                            {t(
+                                                'views.deployment.cluster.content2'
+                                            )}
                                         </Typography>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
                                         >
-                                            What you need is to name a few
-                                            streams and connect.
+                                            {t(
+                                                'views.deployment.cluster.content3'
+                                            )}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
@@ -280,7 +318,9 @@ const Deployment = () => {
                                             variant="contained"
                                             disabled
                                         >
-                                            See Instructions
+                                            {t(
+                                                'views.deployment.cluster.action'
+                                            )}
                                         </Button>
                                     </CardActions>
                                 </Card>

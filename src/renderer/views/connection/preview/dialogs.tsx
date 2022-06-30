@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Button,
@@ -23,6 +24,7 @@ interface AdvancedReadDialogProps {
 
 const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
     const { open, onClose, onSet } = props;
+    const { t } = useTranslation();
 
     const [streamCut, setStreamCut] = React.useState(
         'tail' as 'head' | 'tail' | 'streamcut'
@@ -51,10 +53,16 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
                 onClose();
             }}
         >
-            <DialogTitle>Advanced read options</DialogTitle>
+            <DialogTitle>
+                {t(
+                    'views.connection.preview.dialogs.advancedReadOptions.title'
+                )}
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Where would you like to read from?
+                    {t(
+                        'views.connection.preview.dialogs.advancedReadOptions.readFrom'
+                    )}
                 </DialogContentText>
                 <Box
                     sx={{
@@ -66,7 +74,9 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
                 >
                     <TextField
                         value={streamCut}
-                        label="Position"
+                        label={t(
+                            'views.connection.preview.dialogs.advancedReadOptions.position'
+                        )}
                         onChange={(e) =>
                             setStreamCut(
                                 e.target.value as 'head' | 'tail' | 'streamcut'
@@ -75,14 +85,26 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
                         select // tell TextField to render select
                         sx={{ width: 100 }} // display the full text
                     >
-                        <MenuItem value="head">Head</MenuItem>
-                        <MenuItem value="tail">Tail</MenuItem>
+                        <MenuItem value="head">
+                            {t(
+                                'views.connection.preview.dialogs.advancedReadOptions.head'
+                            )}
+                        </MenuItem>
+                        <MenuItem value="tail">
+                            {t(
+                                'views.connection.preview.dialogs.advancedReadOptions.tail'
+                            )}
+                        </MenuItem>
                         <MenuItem value="streamcut" disabled>
-                            Stream Cut
+                            {t(
+                                'views.connection.preview.dialogs.advancedReadOptions.streamCut'
+                            )}
                         </MenuItem>
                     </TextField>
                     <TextField
-                        label="Specified Stream Cut"
+                        label={t(
+                            'views.connection.preview.dialogs.advancedReadOptions.streamCutValue'
+                        )}
                         value={streamCutData}
                         onChange={({ target: { value } }) =>
                             setStreamCutData(value)
@@ -99,7 +121,9 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
                     }}
                 >
                     <DialogContentText>
-                        Start read automatically?
+                        {t(
+                            'views.connection.preview.dialogs.advancedReadOptions.readAutomatically'
+                        )}
                     </DialogContentText>
                     <Switch
                         sx={{ alignSelf: 'end' }}
@@ -113,7 +137,9 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
                     onClick={() => onSet(streamCut, automaticRead)}
                     variant="contained"
                 >
-                    Set
+                    {t(
+                        'views.connection.preview.dialogs.advancedReadOptions.confirm'
+                    )}
                 </Button>
             </DialogActions>
         </Dialog>

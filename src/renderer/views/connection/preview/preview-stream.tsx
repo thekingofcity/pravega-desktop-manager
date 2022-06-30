@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
     Box,
     Fab,
@@ -23,16 +24,18 @@ import AdvancedReadDialog from './dialogs';
 const PreviewStream = () => {
     const location = useLocation();
     const dispatch = useAppDispatch();
+    const { t } = useTranslation();
 
     const scope = location.pathname.split('/')[3];
     const stream = location.pathname.split('/')[4];
 
-    const { connections, currentConnection, advancedRead } = useAppSelector(
+    const { connections, currentConnection } = useAppSelector(
         (state) => state.connection
     );
     const { connections: previewConnection } = useAppSelector(
         (state) => state.preview
     );
+    const { advancedRead } = useAppSelector((state) => state.settings);
 
     // auto scroll the preview textarea to bottom
     const previewData =
@@ -193,13 +196,15 @@ const PreviewStream = () => {
         >
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <Typography variant="h5" component="div">
-                    Preview
+                    {t('views.connection.preview.title')}
                 </Typography>
                 <Select
                     value="utf8"
                     sx={{ height: 30, right: 15, position: 'fixed' }}
                 >
-                    <MenuItem value="utf8">SimpleUtf8Decoder</MenuItem>
+                    <MenuItem value="utf8">
+                        {t('views.connection.preview.decoders.utf8')}
+                    </MenuItem>
                 </Select>
             </Box>
 
@@ -249,10 +254,13 @@ const PreviewStream = () => {
             />
 
             <Tabs value="Writer1">
-                <Tab label="Writer" value="Writer1" />
+                <Tab
+                    label={t('views.connection.preview.writer')}
+                    value="Writer1"
+                />
             </Tabs>
             <TextareaAutosize
-                placeholder="Write something to the stream!"
+                placeholder={t('views.connection.preview.placeholder')}
                 value={writeArea}
                 onChange={(e) => setWriteArea(e.target.value)}
                 style={{

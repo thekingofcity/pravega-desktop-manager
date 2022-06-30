@@ -5,6 +5,7 @@ import {
     useLocation,
     useNavigate,
 } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Box, IconButton, Tab, Tabs } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,6 +22,7 @@ import { updateMetrics, clearMetrics } from '../../redux/metrics';
 const ConnectionTabs = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const { connections, currentConnection } = useAppSelector(
@@ -120,7 +122,7 @@ const ConnectionTabs = () => {
                     sx={{ color: 'white' }}
                 >
                     <Tab
-                        label="Overview"
+                        label={t('views.connection.tabs.overview')}
                         value={`/connection/${currentConnection}/overview`}
                         to={`/connection/${currentConnection}/overview`}
                         component={RouterLink}
@@ -128,7 +130,7 @@ const ConnectionTabs = () => {
                         sx={{ color: 'white', WebkitAppRegion: 'no-drag' }}
                     />
                     <Tab
-                        label="Metrics"
+                        label={t('views.connection.tabs.metrics')}
                         value={`/connection/${currentConnection}/metrics`}
                         to={`/connection/${currentConnection}/metrics`}
                         component={RouterLink}

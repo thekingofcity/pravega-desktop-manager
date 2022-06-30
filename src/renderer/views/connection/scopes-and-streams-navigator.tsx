@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import TreeView from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
 import {
@@ -156,6 +157,7 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
     const { currentConnection } = useAppSelector((state) => state.connection);
     const { connections } = useAppSelector((state) => state.preview);
     const dispatch = useAppDispatch();
+    const { t } = useTranslation();
 
     const [scopesAndStreams, setScopesAndStreams] = React.useState(
         {} as { [scope: string]: string[] }
@@ -215,7 +217,9 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
         <Card variant="outlined" sx={{ margin: 1 }}>
             <CardContent>
                 <CardHeader
-                    title="Scopes and Streams"
+                    title={t(
+                        'views.connection.overview.scopesAndStreamsNavigator.title'
+                    )}
                     sx={{ paddingLeft: 1, paddingTop: 0 }}
                     action={
                         <IconButton onClick={() => setIsAddScopeOpen(true)}>
