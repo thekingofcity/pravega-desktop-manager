@@ -11,7 +11,7 @@
                 "protocol": "プロトコル",
                 "url": "Url",
                 "port": "ポート",
-                "cancel": "キャンセル",
+                "cancel": "取り消",
                 "confirm": "追加"
             },
             "edit": {
@@ -20,13 +20,13 @@
                 "protocol": "プロトコル",
                 "url": "Url",
                 "port": "ポート",
-                "cancel": "キャンセル",
+                "cancel": "取り消",
                 "confirm": "保存"
             },
             "delete": {
                 "title": "この接続を削除しますか？",
                 "content": "これは元に戻せません。",
-                "cancel": "キャンセル",
+                "cancel": "取り消",
                 "confirm": "削除"
             }
         }
@@ -51,7 +51,7 @@
                     "createScope": {
                         "title": "新しいScopeを作成",
                         "scopeName": "Scopeの名前",
-                        "cancel": "キャンセル",
+                        "cancel": "取り消",
                         "confirm": "追加"
                     },
                     "createStream": {
@@ -75,7 +75,7 @@
                             "eventValue": "1秒あたりのターゲットイベント",
                             "scaleFactor": "スケールファクター"
                         },
-                        "cancel": "キャンセル",
+                        "cancel": "取り消",
                         "confirm": "追加"
                     },
                     "delete": {
@@ -83,7 +83,7 @@
                         "titleStream": "シールして削除{{ scope }}/{{ stream }}？",
                         "content1": "このスコープ内のすべてのストリームを最初に削除する必要があります。",
                         "content2": "これは元に戻せません。",
-                        "cancel": "キャンセル",
+                        "cancel": "取り消",
                         "confirm": "削除"
                     }
                 }
@@ -96,7 +96,7 @@
             "preview": {
                 "title": "プレビュー",
                 "decoders": {
-                    "utf8": "シンプルなUtf8デコーダー"
+                    "utf8": "簡単なutf8解読器"
                 },
                 "writer": "ライター",
                 "placeholder": "Streamに何かを書いてください！",
@@ -110,6 +110,13 @@
                         "streamCut": "Stream Cut",
                         "streamCutValue": "指定されたスStream Cut",
                         "readAutomatically": "自動的に読み取りを開始しますか？",
+                        "confirm": "設定"
+                    },
+                    "filter": {
+                        "title": "フィルターイベント",
+                        "content": "グローバル検索による通常の式が有効になっています。",
+                        "filterStr": "式",
+                        "cancel": "取り消",
                         "confirm": "設定"
                     }
                 }

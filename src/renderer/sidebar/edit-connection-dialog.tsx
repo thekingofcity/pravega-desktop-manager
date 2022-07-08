@@ -85,7 +85,6 @@ const EditConnectionDialog = (props: EditConnectionDialogProps) => {
                         ))}
                     </TextField>
                     <TextField
-                        autoFocus
                         required
                         margin="dense"
                         label="IP"

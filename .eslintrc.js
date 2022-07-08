@@ -4,8 +4,10 @@ module.exports = {
         // A temporary hack related to IDE not resolving correct package.json
         'import/no-extraneous-dependencies': 'off',
         'import/no-unresolved': 'error',
-        // Developers have the right to disable @ts-ignore as long as they know
-        // what they are doing
+        // import should always be in {} format
+        'import/prefer-default-export': 'off',
+        // Developers should have the right to disable @ts-ignore as long as
+        // they know what they are doing
         '@typescript-eslint/ban-ts-comment': 'off',
     },
     parserOptions: {

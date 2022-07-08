@@ -111,6 +111,13 @@
                         "streamCutValue": "Specified Stream Cut",
                         "readAutomatically": "Start read automatically?",
                         "confirm": "Set"
+                    },
+                    "filter": {
+                        "title": "Filter event",
+                        "content": "Regular expression with global search is enabled.",
+                        "filterStr": "Expression",
+                        "cancel": "Cancel",
+                        "confirm": "Set"
                     }
                 }
             }

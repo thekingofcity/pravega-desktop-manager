@@ -87,7 +87,7 @@ const Stream = (props: {
     >;
     setIsRemoveScopeOrStreamOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setCurrentScope: React.Dispatch<React.SetStateAction<string>>;
-    setCurrentStream: React.Dispatch<React.SetStateAction<string>>;
+    setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
     const {
         scope,
@@ -96,7 +96,7 @@ const Stream = (props: {
         setRemoveScopeOrStreamType,
         setIsRemoveScopeOrStreamOpen,
         setCurrentScope,
-        setCurrentStream,
+        setCurrentTab,
     } = props;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -140,7 +140,7 @@ const Stream = (props: {
                 onClick={(e) => {
                     e.stopPropagation(); // prevent parent from opening
                     setCurrentScope(scope);
-                    setCurrentStream(stream);
+                    setCurrentTab(stream);
                     setRemoveScopeOrStreamType('Stream');
                     setIsRemoveScopeOrStreamOpen(true);
                 }}
@@ -172,7 +172,7 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
     }, [setScopesAndStreams, connections, currentConnection]);
 
     const [currentScope, setCurrentScope] = React.useState('');
-    const [currentStream, setCurrentStream] = React.useState('');
+    const [currentStream, setCurrentTab] = React.useState('');
     const [isAddScopeOpen, setIsAddScopeOpen] = React.useState(false);
     const handleAddScope = async (scopeName: string) => {
         window.electron.pravega.createScope(currentConnection, scopeName);
@@ -297,8 +297,8 @@ const ScopesAndStreamsNavigator = (props: { height: number }) => {
                                                                 setCurrentScope={
                                                                     setCurrentScope
                                                                 }
-                                                                setCurrentStream={
-                                                                    setCurrentStream
+                                                                setCurrentTab={
+                                                                    setCurrentTab
                                                                 }
                                                             />
                                                         }

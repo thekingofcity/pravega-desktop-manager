@@ -67,7 +67,6 @@ const AddConnectionDialog = (props: AddConnectionDialogProps) => {
                         ))}
                     </TextField>
                     <TextField
-                        autoFocus
                         required
                         margin="dense"
                         label={t('sidebar.dialogs.create.url')}

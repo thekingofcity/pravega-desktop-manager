@@ -111,6 +111,13 @@
                         "streamCutValue": "지정된 스트림 잘라내기",
                         "readAutomatically": "자동으로 읽기를 시작하시겠습니까?",
                         "confirm": "설정"
+                    },
+                    "filter": {
+                        "title": "필터 이벤트",
+                        "content": "전역 검색이 포함된 정규식이 활성화되었습니다.",
+                        "filterStr": "식",
+                        "cancel": "취소",
+                        "confirm": "설정"
                     }
                 }
             }

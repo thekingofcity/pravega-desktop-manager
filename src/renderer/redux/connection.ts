@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { updateConnectionParam } from '../utils';
 
 // Define a type for the slice state
 export interface ConnectionState {
@@ -9,17 +10,21 @@ export interface ConnectionState {
 export interface Connection {
     name: string;
     url: string;
-    openedStreams: string[];
+    openedStreams: {
+        [scopedStream: string]: { filterStr: string | undefined };
+    };
     currentTab: string;
 }
 
 // Define the initial state using that type
 const initialState: ConnectionState = {
+    // providing a default value on first load
     currentConnection: 'pravega1',
     connections: {},
-    ...JSON.parse(
-        // @ts-ignore
-        localStorage.getItem('reduxConnectionState')
+
+    // load from existing local storage, may be empty or obsolete
+    ...updateConnectionParam(
+        JSON.parse(localStorage.getItem('reduxConnectionState') ?? '{}')
     ),
 };
 
@@ -36,7 +41,7 @@ export const connectionSlice = createSlice({
             >
         ) => {
             state.connections[action.payload.id] = {
-                openedStreams: [],
+                openedStreams: {},
                 currentTab: 'overview',
                 name: action.payload.name,
                 url: action.payload.url,
@@ -73,8 +78,8 @@ export const connectionSlice = createSlice({
             if (state.currentConnection) {
                 const { openedStreams } =
                     state.connections[state.currentConnection];
-                if (!openedStreams.includes(action.payload)) {
-                    openedStreams.push(action.payload);
+                if (!(action.payload in openedStreams)) {
+                    openedStreams[action.payload] = { filterStr: undefined };
                 }
                 state.connections[state.currentConnection].currentTab =
                     action.payload;
@@ -83,26 +88,40 @@ export const connectionSlice = createSlice({
         // remove scoped stream from the openedStreams
         delStream: (state, action: PayloadAction<string>) => {
             if (state.currentConnection) {
+                const {
+                    [action.payload]: deletedScopedStream,
+                    ...remainingScopedStreams
+                } = state.connections[state.currentConnection].openedStreams;
                 state.connections[state.currentConnection].openedStreams =
-                    state.connections[
-                        state.currentConnection
-                    ].openedStreams.filter(
-                        (scopedStream) => scopedStream !== action.payload
-                    );
+                    remainingScopedStreams;
                 state.connections[state.currentConnection].currentTab =
                     'overview';
             }
         },
-        setCurrentStream: (state, action: PayloadAction<string>) => {
+        setCurrentTab: (state, action: PayloadAction<string>) => {
             if (state.currentConnection) {
                 state.connections[state.currentConnection].currentTab =
                     action.payload;
             }
         },
+        // only set filter string if currentConnection and currentTab are valid
+        setFilterStr: (state, action: PayloadAction<string | undefined>) => {
+            const currentTab =
+                state.connections?.[state.currentConnection].currentTab;
+            if (
+                state.connections?.[state.currentConnection].openedStreams?.[
+                    currentTab
+                ]
+            ) {
+                state.connections[state.currentConnection].openedStreams[
+                    currentTab
+                ].filterStr = action.payload;
+            }
+        },
         resetAll: (state) => {
             Object.values(state.connections).forEach((connection) => {
                 connection.currentTab = 'overview';
-                connection.openedStreams = [];
+                connection.openedStreams = {};
             });
         },
     },
@@ -116,7 +135,8 @@ export const {
     setCurrentConnection,
     addStream,
     delStream,
-    setCurrentStream,
+    setCurrentTab,
+    setFilterStr,
     resetAll,
 } = connectionSlice.actions;
 

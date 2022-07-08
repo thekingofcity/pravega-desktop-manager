@@ -14,7 +14,7 @@ import { useAppSelector, useAppDispatch } from '../../redux/store';
 import {
     delStream,
     setCurrentConnection,
-    setCurrentStream,
+    setCurrentTab,
 } from '../../redux/connection';
 import { updateAvailableStreams, deletePreview } from '../../redux/preview';
 import { updateMetrics, clearMetrics } from '../../redux/metrics';
@@ -44,10 +44,10 @@ const ConnectionTabs = () => {
     React.useEffect(() => {
         dispatch(setCurrentConnection(location.pathname.split('/')[2]));
 
-        // The home page has no `setCurrentStream('overview')` on the first click,
+        // The home page has no `setCurrentTab('overview')` on the first click,
         // so set currentTab to 'overview' if the last openedStream is others.
         if (location.pathname.endsWith('overview')) {
-            dispatch(setCurrentStream('overview'));
+            dispatch(setCurrentTab('overview'));
         }
     }, [dispatch, location.pathname]);
 
@@ -126,7 +126,7 @@ const ConnectionTabs = () => {
                         value={`/connection/${currentConnection}/overview`}
                         to={`/connection/${currentConnection}/overview`}
                         component={RouterLink}
-                        onClick={() => dispatch(setCurrentStream('overview'))}
+                        onClick={() => dispatch(setCurrentTab('overview'))}
                         sx={{ color: 'white', WebkitAppRegion: 'no-drag' }}
                     />
                     <Tab
@@ -134,60 +134,60 @@ const ConnectionTabs = () => {
                         value={`/connection/${currentConnection}/metrics`}
                         to={`/connection/${currentConnection}/metrics`}
                         component={RouterLink}
-                        onClick={() => dispatch(setCurrentStream('metrics'))}
+                        onClick={() => dispatch(setCurrentTab('metrics'))}
                         sx={{ color: 'white', WebkitAppRegion: 'no-drag' }}
                     />
-                    {connections[currentConnection].openedStreams.map(
-                        (scopedStream) => (
-                            <Tab
-                                key={scopedStream}
-                                label={scopedStream}
-                                value={`/connection/${currentConnection}/${scopedStream}`}
-                                to={`/connection/${currentConnection}/${scopedStream}`}
-                                icon={
-                                    <>
-                                        {
-                                            // indicate a warning sign when this scopedStream does not exist
-                                            !previewConnection?.[
-                                                currentConnection
-                                            ]?.availableStreams?.[
-                                                scopedStream.split('/')[0]
-                                            ]?.includes(
-                                                scopedStream.split('/')[1]
-                                            ) && (
-                                                <PriorityHighIcon
-                                                    sx={{ color: 'white' }}
-                                                />
+                    {Object.keys(
+                        connections[currentConnection].openedStreams
+                    ).map((scopedStream) => (
+                        <Tab
+                            key={scopedStream}
+                            label={scopedStream}
+                            value={`/connection/${currentConnection}/${scopedStream}`}
+                            to={`/connection/${currentConnection}/${scopedStream}`}
+                            icon={
+                                <>
+                                    {
+                                        // indicate a warning sign when this scopedStream does not exist
+                                        !previewConnection?.[
+                                            currentConnection
+                                        ]?.availableStreams?.[
+                                            scopedStream.split('/')[0]
+                                        ]?.includes(
+                                            scopedStream.split('/')[1]
+                                        ) && (
+                                            <PriorityHighIcon
+                                                sx={{ color: 'white' }}
+                                            />
+                                        )
+                                    }
+                                    <IconButton
+                                        onClick={(e) =>
+                                            handleCloseScopedStream(
+                                                e,
+                                                scopedStream
                                             )
                                         }
-                                        <IconButton
-                                            onClick={(e) =>
-                                                handleCloseScopedStream(
-                                                    e,
-                                                    scopedStream
-                                                )
-                                            }
-                                            // hide the space between text and icon
-                                            sx={{ padding: 0 }}
-                                        >
-                                            <CloseIcon
-                                                sx={{ color: 'white' }}
-                                                fontSize="small"
-                                            />
-                                        </IconButton>
-                                    </>
-                                }
-                                iconPosition="end"
-                                component={RouterLink}
-                                sx={{
-                                    color: 'white',
-                                    WebkitAppRegion: 'no-drag',
-                                    // unify the tab height with or with out IconButton
-                                    minHeight: 48,
-                                }}
-                            />
-                        )
-                    )}
+                                        // hide the space between text and icon
+                                        sx={{ padding: 0 }}
+                                    >
+                                        <CloseIcon
+                                            sx={{ color: 'white' }}
+                                            fontSize="small"
+                                        />
+                                    </IconButton>
+                                </>
+                            }
+                            iconPosition="end"
+                            component={RouterLink}
+                            sx={{
+                                color: 'white',
+                                WebkitAppRegion: 'no-drag',
+                                // unify the tab height with or with out IconButton
+                                minHeight: 48,
+                            }}
+                        />
+                    ))}
                 </Tabs>
             </Box>
             <Outlet />

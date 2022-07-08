@@ -12,14 +12,16 @@ import {
     TextareaAutosize,
     Typography,
 } from '@mui/material';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import SendIcon from '@mui/icons-material/Send';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { useAppSelector, useAppDispatch } from '../../../redux/store';
-import { setCurrentStream } from '../../../redux/connection';
-import { updatePreview } from '../../../redux/preview';
-import AdvancedReadDialog from './dialogs';
+import { setCurrentTab, setFilterStr } from '../../../redux/connection';
+import { updatePreviewWithFilter } from '../../../redux/preview-thunk';
+import { AdvancedReadDialog, FilterDialog } from './dialogs';
 
 const PreviewStream = () => {
     const location = useLocation();
@@ -72,7 +74,17 @@ const PreviewStream = () => {
         );
     };
 
-    // set undefined on pause
+    // filter
+    const filterStr =
+        connections[currentConnection].openedStreams[`${scope}/${stream}`]
+            ?.filterStr;
+    const [filterOpen, setFilterOpen] = React.useState(false);
+    const handleFilter = (newFilterStr: string) => {
+        dispatch(setFilterStr(newFilterStr === '' ? undefined : newFilterStr));
+        setFilterOpen(false);
+    };
+
+    // set the reader in main process to undefined if pause
     React.useEffect(() => {
         const read =
             !pause &&
@@ -111,7 +123,7 @@ const PreviewStream = () => {
         () => {
             // As we are still using <Tabs>, there is no custom operation in `navigate`,
             // we need to manually set the currentStream on load or each change.
-            dispatch(setCurrentStream(`${scope}/${stream}`));
+            dispatch(setCurrentTab(`${scope}/${stream}`));
 
             // re-init on scopedStream change
             setAdvancedReadOpened(false);
@@ -157,11 +169,7 @@ const PreviewStream = () => {
                         `${currentConn} ${scopedStream} reads: ${data}`
                     );
                     dispatch(
-                        updatePreview({
-                            connection: currentConn,
-                            scopedStream,
-                            data,
-                        })
+                        updatePreviewWithFilter(currentConn, scopedStream, data)
                     );
                 }
             );
@@ -218,9 +226,32 @@ const PreviewStream = () => {
                     marginTop: 10,
                 }}
             />
+
             <Fab
                 color="primary"
-                sx={{ position: 'absolute', bottom: 180, right: 16 }}
+                sx={{ position: 'absolute', bottom: 240, right: 32 }}
+            >
+                <IconButton
+                    onClick={() => {
+                        setFilterOpen(!filterOpen);
+                    }}
+                >
+                    {filterStr ? (
+                        <FilterAltIcon sx={{ color: 'white' }} />
+                    ) : (
+                        <FilterAltOffIcon sx={{ color: 'white' }} />
+                    )}
+                </IconButton>
+            </Fab>
+            <FilterDialog
+                open={filterOpen}
+                onClose={() => setFilterOpen(false)}
+                onSet={handleFilter}
+            />
+
+            <Fab
+                color="primary"
+                sx={{ position: 'absolute', bottom: 180, right: 32 }}
             >
                 <IconButton
                     onClick={() => {
@@ -240,7 +271,7 @@ const PreviewStream = () => {
             {advancedRead && !advancedReadOpened && (
                 <Fab
                     color="primary"
-                    sx={{ position: 'absolute', bottom: 180, right: 16 }}
+                    sx={{ position: 'absolute', bottom: 180, right: 32 }}
                 >
                     <IconButton onClick={() => setAdvancedReadOpen(true)}>
                         <SettingsIcon sx={{ color: 'white' }} />
@@ -272,7 +303,7 @@ const PreviewStream = () => {
             />
             <Fab
                 color="primary"
-                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                sx={{ position: 'absolute', bottom: 16, right: 32 }}
             >
                 <IconButton onClick={handleWrite}>
                     <SendIcon sx={{ color: 'white' }} />

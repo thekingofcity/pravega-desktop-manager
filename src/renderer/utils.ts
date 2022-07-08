@@ -37,3 +37,18 @@ export const useWindowSize = (): Size => {
 
     return windowSize;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const updateConnectionParam = (connectionParam: any) => {
+    // v3 -> v4
+    if (Array.isArray(connectionParam.openedStreams)) {
+        connectionParam.openedStreams = Object.fromEntries(
+            connectionParam.openedStreams.map((openedStream: string) => [
+                openedStream,
+                { filterStr: undefined },
+            ])
+        );
+    }
+
+    return connectionParam;
+};

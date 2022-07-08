@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
-import { setCurrentStream } from '../../redux/connection';
+import { setCurrentTab } from '../../redux/connection';
 import { CustomRadialGaugeValueLabel } from './RadialGaugeValueLabel';
 
 /**
@@ -140,7 +140,7 @@ const Metrics = () => {
                     size="small"
                     onClick={() => {
                         // set current tab, so ConnectionTabs will display the right underline
-                        dispatch(setCurrentStream('metrics'));
+                        dispatch(setCurrentTab('metrics'));
                         // redirect to metrics tab
                         navigate(`/connection/${currentConnection}/metrics`);
                     }}

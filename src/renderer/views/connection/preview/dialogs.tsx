@@ -12,6 +12,7 @@ import {
     Switch,
     TextField,
 } from '@mui/material';
+import { useAppSelector } from '../../../redux/store';
 
 interface AdvancedReadDialogProps {
     open: boolean;
@@ -22,7 +23,7 @@ interface AdvancedReadDialogProps {
     ) => void;
 }
 
-const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
+export const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
     const { open, onClose, onSet } = props;
     const { t } = useTranslation();
 
@@ -32,17 +33,12 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
     const [streamCutData, setStreamCutData] = React.useState('');
     const [automaticRead, setAutomaticRead] = React.useState(true);
 
-    // clear name text field on each open
+    // clear inputs on each open
     React.useEffect(() => {
         setStreamCut('tail');
         setStreamCutData('');
         setAutomaticRead(true);
     }, [open]);
-
-    // const handleSet = async () => {
-    //     onSet(streamCut, automaticRead);
-    //     onClose();
-    // };
 
     return (
         <Dialog
@@ -146,4 +142,80 @@ const AdvancedReadDialog = (props: AdvancedReadDialogProps) => {
     );
 };
 
-export default AdvancedReadDialog;
+interface FilterDialogProps {
+    open: boolean;
+    onClose: () => void;
+    onSet: (filterStr: string) => void;
+}
+
+export const FilterDialog = (props: FilterDialogProps) => {
+    const { open, onClose, onSet } = props;
+    const { t } = useTranslation();
+    const { currentConnection, connections } = useAppSelector(
+        (state) => state.connection
+    );
+    const { currentTab } = connections[currentConnection];
+    const oldFilterStr =
+        connections[currentConnection].openedStreams[currentTab]?.filterStr ??
+        '';
+
+    const [filterStr, setFilterStr] = React.useState('');
+    const [filterStrErr, setFilterStrErr] = React.useState(false);
+    // clear filter text field on each open
+    React.useEffect(() => setFilterStr(oldFilterStr), [open, oldFilterStr]);
+
+    return (
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle>
+                {t('views.connection.preview.dialogs.filter.title')}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    {t('views.connection.preview.dialogs.filter.content')}
+                </DialogContentText>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginTop: 2,
+                        marginBottom: 2,
+                    }}
+                >
+                    <TextField
+                        label={t(
+                            'views.connection.preview.dialogs.filter.filterStr'
+                        )}
+                        value={filterStr}
+                        autoFocus
+                        sx={{ width: 500 }}
+                        error={filterStrErr}
+                        onChange={({ target: { value } }) => {
+                            setFilterStr(value);
+                            try {
+                                // test if it is a valid regular expression
+                                RegExp(value, 'g');
+                            } catch (e) {
+                                setFilterStrErr(true);
+                                return;
+                            }
+                            setFilterStrErr(false);
+                        }}
+                    />
+                </Box>
+            </DialogContent>
+            <DialogActions sx={{ padding: 3 }}>
+                <Button onClick={() => onClose()} variant="contained">
+                    {t('views.connection.preview.dialogs.filter.cancel')}
+                </Button>
+                <Button
+                    onClick={() => onSet(filterStr)}
+                    disabled={filterStrErr}
+                    variant="contained"
+                    color="error"
+                >
+                    {t('views.connection.preview.dialogs.filter.confirm')}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+};

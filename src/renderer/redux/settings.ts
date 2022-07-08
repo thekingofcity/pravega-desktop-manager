@@ -8,7 +8,11 @@ export interface SettingsState {
     advancedRead: boolean;
 }
 
-const initialState: SettingsState = { language: 'en-US', advancedRead: true };
+const initialState: SettingsState = {
+    language: 'en-US',
+    advancedRead: true,
+    ...JSON.parse(localStorage.getItem('reduxSettingsState') ?? '{}'),
+};
 
 export const settingsSlice = createSlice({
     name: 'settings',

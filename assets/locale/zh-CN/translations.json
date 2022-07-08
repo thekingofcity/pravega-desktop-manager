@@ -110,7 +110,14 @@
                         "streamCut": "Stream Cut",
                         "streamCutValue": "自定义的Stream Cut值",
                         "readAutomatically": "自动开始读取？",
-                        "confirm": "好的"
+                        "confirm": "设置"
+                    },
+                    "filter": {
+                        "title": "过滤事件",
+                        "content": "全局搜索的正则表达式已启用。",
+                        "filterStr": "表达式",
+                        "cancel": "取消",
+                        "confirm": "设置"
                     }
                 }
             }

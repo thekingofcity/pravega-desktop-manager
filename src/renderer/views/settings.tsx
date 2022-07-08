@@ -35,9 +35,6 @@ const Settings = () => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
 
-    const [isReconnectOnStartup, setIsReconnectOnStartup] =
-        React.useState(false);
-
     const settingsItem: {
         type: SettingType;
         value: string;
