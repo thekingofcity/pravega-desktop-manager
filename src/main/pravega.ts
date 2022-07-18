@@ -20,8 +20,8 @@ const handleIPC = (
     let currentConnection: string | undefined;
     let scopedStreams: string | undefined;
 
-    // here we have 3 run forever code that will return immediately if the
-    // above global variables are not set
+    // Here we have 3 run forever code that will return immediately if the
+    // above global variables are not set.
     // 1. fetch scopes and streams on current connection
     const listScopesAndStreams = async () => {
         const name = currentConnection;
@@ -30,11 +30,10 @@ const handleIPC = (
             return;
         }
 
-        // return [] if timeout for 300 ms
-        const scopes: string[] = await Promise.race([
-            managerPool[name].manager.list_scopes(),
-            new Promise((resolve) => setTimeout(() => resolve([]), 300)),
-        ]);
+        // This will throw error if it can not connect to the server after 1 sec,
+        // but should be fine as there is no blocking and scopes and streams
+        // won't be updated in the renderer.
+        const scopes: string[] = await managerPool[name].manager.list_scopes();
         const scopeWithStreams = Object.fromEntries(
             await Promise.all(
                 scopes.map(

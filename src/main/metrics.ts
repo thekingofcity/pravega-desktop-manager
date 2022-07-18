@@ -42,7 +42,7 @@ const getMetrics = async (
             Object.fromEntries(metrics)
         );
     } catch (err) {
-        log.info(`Timeout to get metrics for ${currentConnection}`);
+        // log.info(`Timeout to get metrics for ${currentConnection}`);
     } finally {
         clearTimeout(timer);
     }
