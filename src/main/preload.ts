@@ -99,6 +99,18 @@ contextBridge.exposeInMainWorld('electron', {
             stream: string,
             events: string[]
         ) => ipcRenderer.send('write-events', [name, scope, stream, events]),
+        writeTransaction: (
+            name: string,
+            scope: string,
+            stream: string,
+            events: string[]
+        ) =>
+            ipcRenderer.send('write-transaction', [
+                name,
+                scope,
+                stream,
+                events,
+            ]),
         createReader: (
             name: string,
             scope: string,

@@ -210,16 +210,27 @@ const handleIPC = (
                 throw new Error(`${name} is not in managerPool`);
             }
             if (!(`${scope}/${stream}` in managerPool[name].rw)) {
+                // might be an issue if writer and reader are created a the same time
                 managerPool[name].rw[`${scope}/${stream}`] = {
                     readerGroups: [],
                     readers: [],
                     writers: [],
+                    txnWriters: [],
                 };
             }
             const rw = managerPool[name].rw[`${scope}/${stream}`];
             if (rw.writers.length === 0) {
                 rw.writers.push(
                     managerPool[name].manager.create_writer(scope, stream)
+                );
+            }
+            if (rw.txnWriters.length === 0) {
+                rw.txnWriters.push(
+                    managerPool[name].manager.create_transaction_writer(
+                        scope,
+                        stream,
+                        BigInt(Math.floor(Math.random() * 1000000))
+                    )
                 );
             }
             log.info(`Create writer on ${scope}/${stream}`);
@@ -247,6 +258,31 @@ const handleIPC = (
         }
     );
     ipcMain.on(
+        'write-transaction',
+        async (
+            _: Electron.IpcMainInvokeEvent,
+            args: [string, string, string, string[]]
+        ) => {
+            const [name, scope, stream, events] = args;
+            if (!(name in managerPool)) {
+                throw new Error(`${name} is not in managerPool`);
+            }
+            if (
+                `${scope}/${stream}` in managerPool[name].rw &&
+                managerPool[name].rw[`${scope}/${stream}`].txnWriters.length > 0
+            ) {
+                const txnWriter =
+                    managerPool[name].rw[`${scope}/${stream}`].txnWriters.at(0);
+                log.info(`${scope}/${stream} write transaction: ${events}`);
+                const txn = await txnWriter.begin_txn();
+                await Promise.all(
+                    events.map((event) => txn.write_event(event))
+                );
+                txn.commit();
+            }
+        }
+    );
+    ipcMain.on(
         'create-reader',
         async (
             _: Electron.IpcMainInvokeEvent,
@@ -261,6 +297,7 @@ const handleIPC = (
                     readerGroups: [],
                     readers: [],
                     writers: [],
+                    txnWriters: [],
                 };
             }
             const rw = managerPool[name].rw[`${scope}/${stream}`];

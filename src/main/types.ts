@@ -6,14 +6,20 @@
  */
 export type ManagerPool = {
     [name: string]: {
-        manager: unknown;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        manager: any;
         url: string;
         rw: {
             // internal readerGroups, readers, writers for each stream
             [scopedStreams: string]: {
-                readerGroups: unknown[];
-                readers: unknown[];
-                writers: unknown[];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                readerGroups: any[];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                readers: any[];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                writers: any[];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                txnWriters: any[];
             };
         };
     };

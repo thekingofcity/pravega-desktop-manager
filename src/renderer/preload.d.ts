@@ -57,6 +57,12 @@ declare global {
                     stream: string,
                     events: string[]
                 ) => Promise<void>;
+                writeTransaction: (
+                    name: string,
+                    scope: string,
+                    stream: string,
+                    events: string[]
+                ) => Promise<void>;
                 createReader: (
                     name: string,
                     scope: string,

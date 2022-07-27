@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import HttpsIcon from '@mui/icons-material/Https';
 import SendIcon from '@mui/icons-material/Send';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -112,6 +113,13 @@ const PreviewStream = () => {
     const [writeArea, setWriteArea] = React.useState('');
     const handleWrite = () =>
         window.electron.pravega.writeEvents(
+            currentConnection,
+            scope,
+            stream,
+            writeArea.split('\n')
+        );
+    const handleWriteTransaction = () =>
+        window.electron.pravega.writeTransaction(
             currentConnection,
             scope,
             stream,
@@ -229,7 +237,7 @@ const PreviewStream = () => {
 
             <Fab
                 color="primary"
-                sx={{ position: 'absolute', bottom: 240, right: 32 }}
+                sx={{ position: 'absolute', bottom: 265, right: 32 }}
             >
                 <IconButton
                     onClick={() => {
@@ -251,7 +259,7 @@ const PreviewStream = () => {
 
             <Fab
                 color="primary"
-                sx={{ position: 'absolute', bottom: 180, right: 32 }}
+                sx={{ position: 'absolute', bottom: 205, right: 32 }}
             >
                 <IconButton
                     onClick={() => {
@@ -271,7 +279,7 @@ const PreviewStream = () => {
             {advancedRead && !advancedReadOpened && (
                 <Fab
                     color="primary"
-                    sx={{ position: 'absolute', bottom: 180, right: 32 }}
+                    sx={{ position: 'absolute', bottom: 205, right: 32 }}
                 >
                     <IconButton onClick={() => setAdvancedReadOpen(true)}>
                         <SettingsIcon sx={{ color: 'white' }} />
@@ -296,11 +304,29 @@ const PreviewStream = () => {
                 onChange={(e) => setWriteArea(e.target.value)}
                 style={{
                     width: 'calc(100% - 35px)',
-                    height: 100,
+                    height: 125,
                     overflow: 'auto',
                     marginTop: 10,
                 }}
             />
+            <Fab
+                color="primary"
+                sx={{ position: 'absolute', bottom: 76, right: 32 }}
+            >
+                <IconButton onClick={handleWriteTransaction}>
+                    <HttpsIcon
+                        sx={{
+                            width: 12,
+                            height: 15.75,
+                            position: 'absolute',
+                            bottom: 5,
+                            right: 4,
+                            color: 'white',
+                        }}
+                    />
+                    <SendIcon sx={{ color: 'white' }} />
+                </IconButton>
+            </Fab>
             <Fab
                 color="primary"
                 sx={{ position: 'absolute', bottom: 16, right: 32 }}
