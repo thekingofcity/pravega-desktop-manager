@@ -26,7 +26,7 @@ Get the latest release at the [official release page](https://github.com/theking
 
 ---
 
-![demo video](https://user-images.githubusercontent.com/3353040/180732782-60c2bbf7-6c1e-413f-8af2-8894364923d7.mp4)
+<video src="https://user-images.githubusercontent.com/3353040/180732782-60c2bbf7-6c1e-413f-8af2-8894364923d7.mp4">
 
 ![pic1](https://user-images.githubusercontent.com/3353040/180733053-fc845f5e-2daa-4ff0-b0ed-8b9ca2c3d1a2.png)
 
